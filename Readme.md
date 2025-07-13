@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Григор Мкртчян](https://up.htmlacademy.ru/javascript-individual/2/user/2552419).
-* Наставник: [ХЗ КТО наставник](https://FSB.ru).
+* Наставник: [Алексей Хапов](https://htmlacademy.ru/profile/id118459).
 
 ---
 
