@@ -1,11 +1,12 @@
-import { generateUniqueIds, getRandomInteger } from './utils.js';
-import { MESSAGES, NAMES } from './data.js';
+import { generateUniqueIds } from './utils.js';
+import { MESSAGES, NAMES, MIN_AVATAR_NUM, MAX_AVATAR_NUM } from './constants.js';
+import { getRandomInteger } from './utils.js';
 
 export const generateComments = (count) => {
   const commentIds = generateUniqueIds(count);
   return Array.from({length: count}, (_, i) => ({
     id: commentIds[i],
-    avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
+    avatar: `img/avatar-${getRandomInteger(MIN_AVATAR_NUM, MAX_AVATAR_NUM)}.svg`,
     message: MESSAGES[getRandomInteger(0, MESSAGES.length - 1)],
     name: NAMES[getRandomInteger(0, NAMES.length - 1)]
   }));

@@ -1,4 +1,15 @@
-// data.js
+// Параметры генерации
+export const MIN_ID = 1;
+export const MAX_ID = 1000;
+export const MIN_AVATAR_NUM = 1;
+export const MAX_AVATAR_NUM = 6;
+export const MIN_LIKES = 15;
+export const MAX_LIKES = 200;
+export const MIN_COMMENTS = 0;
+export const MAX_COMMENTS = 30;
+export const PHOTOS_COUNT = 25;
+
+// Данные для генерации
 export const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
