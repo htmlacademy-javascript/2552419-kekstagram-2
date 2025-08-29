@@ -6,6 +6,12 @@ const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const socialComments = bigPicture.querySelector('.social__comments');
 const socialCommentCount = bigPicture.querySelector('.social__comment-count');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
+const socialCommentShownCount = socialCommentCount.querySelector('.social__comment-shown-count');
+const socialCommentTotalCount = socialCommentCount.querySelector('.social__comment-total-count');
+
+let currentComments = [];
+let commentsShown = 0;
+const COMMENTS_PER_PORTION = 5;
 
 // Функция для создания одного комментария
 const createComment = (comment) => {
@@ -29,29 +35,50 @@ const createComment = (comment) => {
   return commentElement;
 };
 
-// Функция для отрисовки всех комментариев
-const renderComments = (comments) => {
-  socialComments.innerHTML = '';
-  comments.forEach(comment => {
+// Функция для отрисовки порции комментариев
+const renderCommentsPortion = () => {
+  const commentsToShow = currentComments.slice(commentsShown, commentsShown + COMMENTS_PER_PORTION);
+
+  commentsToShow.forEach(comment => {
     socialComments.appendChild(createComment(comment));
   });
+
+  commentsShown += commentsToShow.length;
+  socialCommentShownCount.textContent = commentsShown;
+  socialCommentTotalCount.textContent = currentComments.length;
+
+  // Скрываем кнопку, если все комментарии показаны
+  if (commentsShown >= currentComments.length) {
+    commentsLoader.classList.add('hidden');
+  } else {
+    commentsLoader.classList.remove('hidden');
+  }
+};
+
+// Обработчик клика по кнопке "Загрузить ещё"
+const onCommentsLoaderClick = () => {
+  renderCommentsPortion();
 };
 
 // Функция открытия полноразмерного изображения
 const openBigPicture = (photo) => {
+  // Сбрасываем состояние
+  commentsShown = 0;
+  currentComments = photo.comments;
+  socialComments.innerHTML = '';
+
   // Заполняем данные
   bigPicture.querySelector('.big-picture__img img').src = photo.url;
   bigPicture.querySelector('.big-picture__img img').alt = photo.description;
   bigPicture.querySelector('.likes-count').textContent = photo.likes;
-  bigPicture.querySelector('.social__comment-total-count').textContent = photo.comments.length;
   bigPicture.querySelector('.social__caption').textContent = photo.description;
 
-  // Отрисовываем комментарии
-  renderComments(photo.comments);
+  // Показываем блоки счётчика комментариев и загрузки
+  socialCommentCount.classList.remove('hidden');
+  commentsLoader.classList.remove('hidden');
 
-  // Скрываем блоки счётчика комментариев и загрузки
-  socialCommentCount.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
+  // Отрисовываем первую порцию комментариев
+  renderCommentsPortion();
 
   // Показываем окно
   bigPicture.classList.remove('hidden');
@@ -60,6 +87,7 @@ const openBigPicture = (photo) => {
   // Добавляем обработчики событий
   document.addEventListener('keydown', onDocumentKeydown);
   closeButton.addEventListener('click', onCloseButtonClick);
+  commentsLoader.addEventListener('click', onCommentsLoaderClick);
 };
 
 // Функция закрытия полноразмерного изображения
@@ -70,6 +98,7 @@ const closeBigPicture = () => {
   // Удаляем обработчики событий
   document.removeEventListener('keydown', onDocumentKeydown);
   closeButton.removeEventListener('click', onCloseButtonClick);
+  commentsLoader.removeEventListener('click', onCommentsLoaderClick);
 };
 
 // Обработчик клавиши Esc
@@ -85,5 +114,4 @@ function onCloseButtonClick() {
   closeBigPicture();
 }
 
-// Экспортируем функцию для открытия полноразмерного изображения
 export { openBigPicture };
