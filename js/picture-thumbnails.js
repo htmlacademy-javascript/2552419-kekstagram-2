@@ -1,4 +1,6 @@
 // picture-thumbnails.js
+import { openBigPicture } from './big-picture.js';
+
 const renderThumbnails = (photosData) => {
   const picturesContainer = document.querySelector('.pictures');
   const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -12,8 +14,11 @@ const renderThumbnails = (photosData) => {
     thumbnail.querySelector('.picture__likes').textContent = photo.likes;
     thumbnail.querySelector('.picture__comments').textContent = photo.comments.length;
 
-    // Сохраняем данные фото в элементе для последующего использования
-    thumbnail.dataset.photoId = photo.id;
+    // Добавляем обработчик клика для открытия полноразмерного изображения
+    thumbnail.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openBigPicture(photo);
+    });
 
     fragment.appendChild(thumbnail);
   });
