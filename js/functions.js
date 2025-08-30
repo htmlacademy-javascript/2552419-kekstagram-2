@@ -17,7 +17,7 @@ function isMeetingWithinWorkHours(workStart, workEnd, meetingStart, duration) {
   return meetingStartMinutes >= workStartMinutes &&
          meetingEndMinutes <= workEndMinutes;
 }
-
+z
 console.log(isMeetingWithinWorkHours('08:00', '17:30', '14:00', 90)); // true
 console.log(isMeetingWithinWorkHours('8:0', '10:0', '8:0', 120));     // true
 console.log(isMeetingWithinWorkHours('08:00', '14:30', '14:00', 90)); // false

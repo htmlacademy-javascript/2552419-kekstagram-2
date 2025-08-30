@@ -1,16 +1,16 @@
 // Параметры генерации
-export const MIN_ID = 1;
-export const MAX_ID = 1000;
-export const MIN_AVATAR_NUM = 1;
-export const MAX_AVATAR_NUM = 6;
-export const MIN_LIKES = 15;
-export const MAX_LIKES = 200;
-export const MIN_COMMENTS = 0;
-export const MAX_COMMENTS = 30;
-export const PHOTOS_COUNT = 25;
+ const MIN_ID = 1;
+ const MAX_ID = 1000;
+ const MIN_AVATAR_NUM = 1;
+ const MAX_AVATAR_NUM = 6;
+ const MIN_LIKES = 15;
+ const MAX_LIKES = 200;
+ const MIN_COMMENTS = 0;
+ const MAX_COMMENTS = 30;
+ const PHOTOS_COUNT = 25;
 
 // Данные для генерации
-export const MESSAGES = [
+ const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -19,9 +19,9 @@ export const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-export const NAMES = ['Артём', 'Мария', 'Дмитрий', 'Анна', 'Сергей', 'Елена', 'Иван', 'Ольга', 'Алексей', 'Татьяна'];
+ const NAMES = ['Артём', 'Мария', 'Дмитрий', 'Анна', 'Сергей', 'Елена', 'Иван', 'Ольга', 'Алексей', 'Татьяна'];
 
-export const DESCRIPTIONS = [
+ const DESCRIPTIONS = [
   'Отличный момент!',
   'Закат на море',
   'Мой любимый питомец',
@@ -33,3 +33,5 @@ export const DESCRIPTIONS = [
   'Уличное искусство',
   'Фото на память'
 ];
+
+export {MIN_ID,MAX_ID,MIN_AVATAR_NUM,MAX_AVATAR_NUM,MIN_LIKES,MAX_LIKES,MIN_COMMENTS,MAX_COMMENTS,PHOTOS_COUNT,MESSAGES,NAMES,DESCRIPTIONS};

@@ -2,7 +2,7 @@ import { generateUniqueIds } from './utils.js';
 import { MESSAGES, NAMES, MIN_AVATAR_NUM, MAX_AVATAR_NUM } from './constants.js';
 import { getRandomInteger } from './utils.js';
 
-export const generateComments = (count) => {
+const generateComments = (count) => {
   const commentIds = generateUniqueIds(count);
   return Array.from({length: count}, (_, i) => ({
     id: commentIds[i],
@@ -11,3 +11,5 @@ export const generateComments = (count) => {
     name: NAMES[getRandomInteger(0, NAMES.length - 1)]
   }));
 };
+
+export {generateComments};
