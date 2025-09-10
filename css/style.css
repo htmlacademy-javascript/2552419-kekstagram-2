@@ -1427,7 +1427,7 @@ main {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .img-upload__field-wrapper {
@@ -1479,3 +1479,16 @@ main {
 
 .img-upload__submit.loading {
   animation: loading 1s infinite;
+}
+.effect-level {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.effect-level__slider {
+  margin: 10px 0;
+}
+
+.img-upload__effect-level {
+  margin-top: 15px;
+}
