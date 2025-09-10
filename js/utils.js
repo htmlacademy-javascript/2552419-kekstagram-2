@@ -1,9 +1,7 @@
 // utils.js
 import { MIN_ID, MAX_ID } from './constants.js';
 
-function getRandomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const getRandomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const generateUniqueIds = (count) => {
   const ids = new Set();

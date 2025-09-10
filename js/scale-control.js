@@ -8,32 +8,37 @@ let currentScale = SCALE_DEFAULT;
 
 // Функция для обновления масштаба
 const updateScale = (value) => {
-  const scaleControlValue = document.querySelector('.scale__control--value');
-  const imagePreview = document.querySelector('.img-upload__preview img');
+  const scaleControlValueElement = document.querySelector('.scale__control--value');
+  const imagePreviewElement = document.querySelector('.img-upload__preview img');
 
-  if (scaleControlValue && imagePreview) {
+  if (scaleControlValueElement && imagePreviewElement) {
     currentScale = value;
-    scaleControlValue.value = `${value}%`;
-    imagePreview.style.transform = `scale(${value / 100})`;
+    scaleControlValueElement.value = `${value}%`;
+    imagePreviewElement.style.transform = `scale(${value / 100})`;
   }
+};
+
+// Обработчик уменьшения масштаба
+const onScaleControlSmallerClick = () => {
+  const newScale = Math.max(currentScale - SCALE_STEP, SCALE_MIN);
+  updateScale(newScale);
+};
+
+// Обработчик увеличения масштаба
+const onScaleControlBiggerClick = () => {
+  const newScale = Math.min(currentScale + SCALE_STEP, SCALE_MAX);
+  updateScale(newScale);
 };
 
 // Инициализация масштаба
 const initScale = () => {
-  const scaleControlSmaller = document.querySelector('.scale__control--smaller');
-  const scaleControlBigger = document.querySelector('.scale__control--bigger');
+  const scaleControlSmallerElement = document.querySelector('.scale__control--smaller');
+  const scaleControlBiggerElement = document.querySelector('.scale__control--bigger');
 
-  if (scaleControlSmaller && scaleControlBigger) {
+  if (scaleControlSmallerElement && scaleControlBiggerElement) {
     // Обработчики для кнопок изменения масштаба
-    scaleControlSmaller.addEventListener('click', () => {
-      const newScale = Math.max(currentScale - SCALE_STEP, SCALE_MIN);
-      updateScale(newScale);
-    });
-
-    scaleControlBigger.addEventListener('click', () => {
-      const newScale = Math.min(currentScale + SCALE_STEP, SCALE_MAX);
-      updateScale(newScale);
-    });
+    scaleControlSmallerElement.addEventListener('click', onScaleControlSmallerClick);
+    scaleControlBiggerElement.addEventListener('click', onScaleControlBiggerClick);
 
     // Инициализация масштаба по умолчанию
     updateScale(SCALE_DEFAULT);
@@ -41,4 +46,3 @@ const initScale = () => {
 };
 
 export { initScale };
-

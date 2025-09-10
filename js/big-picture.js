@@ -1,13 +1,13 @@
 // big-picture.js
 import { isEscapeKey } from './utils.js';
 
-const bigPicture = document.querySelector('.big-picture');
-const closeButton = bigPicture.querySelector('.big-picture__cancel');
-const socialComments = bigPicture.querySelector('.social__comments');
-const socialCommentCount = bigPicture.querySelector('.social__comment-count');
-const commentsLoader = bigPicture.querySelector('.comments-loader');
-const socialCommentShownCount = socialCommentCount.querySelector('.social__comment-shown-count');
-const socialCommentTotalCount = socialCommentCount.querySelector('.social__comment-total-count');
+const bigPictureElement = document.querySelector('.big-picture');
+const closeButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
+const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
+const socialCommentCountElement = bigPictureElement.querySelector('.social__comment-count');
+const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+const socialCommentShownCountElement = socialCommentCountElement.querySelector('.social__comment-shown-count');
+const socialCommentTotalCountElement = socialCommentCountElement.querySelector('.social__comment-total-count');
 
 let currentComments = [];
 let commentsShown = 0;
@@ -39,19 +39,19 @@ const createComment = (comment) => {
 const renderCommentsPortion = () => {
   const commentsToShow = currentComments.slice(commentsShown, commentsShown + COMMENTS_PER_PORTION);
 
-  commentsToShow.forEach(comment => {
-    socialComments.appendChild(createComment(comment));
+  commentsToShow.forEach((comment) => {
+    socialCommentsElement.appendChild(createComment(comment));
   });
 
   commentsShown += commentsToShow.length;
-  socialCommentShownCount.textContent = commentsShown;
-  socialCommentTotalCount.textContent = currentComments.length;
+  socialCommentShownCountElement.textContent = commentsShown;
+  socialCommentTotalCountElement.textContent = currentComments.length;
 
   // Скрываем кнопку, если все комментарии показаны
   if (commentsShown >= currentComments.length) {
-    commentsLoader.classList.add('hidden');
+    commentsLoaderElement.classList.add('hidden');
   } else {
-    commentsLoader.classList.remove('hidden');
+    commentsLoaderElement.classList.remove('hidden');
   }
 };
 
@@ -60,58 +60,58 @@ const onCommentsLoaderClick = () => {
   renderCommentsPortion();
 };
 
+// Обработчик клавиши Esc
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeBigPicture();
+  }
+};
+
+// Обработчик клика по кнопке закрытия
+const onCloseButtonClick = () => {
+  closeBigPicture();
+};
+
+// Функция закрытия полноразмерного изображения
+const closeBigPicture = () => {
+  bigPictureElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+
+  // Удаляем обработчики событий
+  document.removeEventListener('keydown', onDocumentKeydown);
+  closeButtonElement.removeEventListener('click', onCloseButtonClick);
+  commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
+};
+
 // Функция открытия полноразмерного изображения
 const openBigPicture = (photo) => {
   // Сбрасываем состояние
   commentsShown = 0;
   currentComments = photo.comments;
-  socialComments.innerHTML = '';
+  socialCommentsElement.innerHTML = '';
 
   // Заполняем данные
-  bigPicture.querySelector('.big-picture__img img').src = photo.url;
-  bigPicture.querySelector('.big-picture__img img').alt = photo.description;
-  bigPicture.querySelector('.likes-count').textContent = photo.likes;
-  bigPicture.querySelector('.social__caption').textContent = photo.description;
+  bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
+  bigPictureElement.querySelector('.big-picture__img img').alt = photo.description;
+  bigPictureElement.querySelector('.likes-count').textContent = photo.likes;
+  bigPictureElement.querySelector('.social__caption').textContent = photo.description;
 
   // Показываем блоки счётчика комментариев и загрузки
-  socialCommentCount.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
+  socialCommentCountElement.classList.remove('hidden');
+  commentsLoaderElement.classList.remove('hidden');
 
   // Отрисовываем первую порцию комментариев
   renderCommentsPortion();
 
   // Показываем окно
-  bigPicture.classList.remove('hidden');
+  bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
   // Добавляем обработчики событий
   document.addEventListener('keydown', onDocumentKeydown);
-  closeButton.addEventListener('click', onCloseButtonClick);
-  commentsLoader.addEventListener('click', onCommentsLoaderClick);
+  closeButtonElement.addEventListener('click', onCloseButtonClick);
+  commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
 };
-
-// Функция закрытия полноразмерного изображения
-const closeBigPicture = () => {
-  bigPicture.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-
-  // Удаляем обработчики событий
-  document.removeEventListener('keydown', onDocumentKeydown);
-  closeButton.removeEventListener('click', onCloseButtonClick);
-  commentsLoader.removeEventListener('click', onCommentsLoaderClick);
-};
-
-// Обработчик клавиши Esc
-function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
-}
-
-// Обработчик клика по кнопке закрытия
-function onCloseButtonClick() {
-  closeBigPicture();
-}
 
 export { openBigPicture };
