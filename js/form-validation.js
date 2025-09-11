@@ -1,4 +1,4 @@
-// form-validation.js
+
 import { isEscapeKey } from './utils.js';
 
 const form = document.querySelector('.img-upload__form');
@@ -19,7 +19,21 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__error'
 });
 
-// Функция валидации хэштегов
+// Валидаторы для хэштегов
+const validateHashtagFormat = (hashtag) => {
+  const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
+  return hashtagRegex.test(hashtag);
+};
+
+const validateHashtagCount = (hashtags) => {
+  return hashtags.length <= 5;
+};
+
+const validateHashtagUniqueness = (hashtags) => {
+  const uniqueHashtags = new Set(hashtags.map(tag => tag.toLowerCase()));
+  return uniqueHashtags.size === hashtags.length;
+};
+
 const validateHashtags = (value) => {
   if (!value.trim()) {
     return true; // хэштеги не обязательны
@@ -28,19 +42,16 @@ const validateHashtags = (value) => {
   const hashtags = value.trim().split(/\s+/).filter(tag => tag !== '');
 
   // Проверка на максимальное количество хэштегов
-  if (hashtags.length > 5) {
+  if (!validateHashtagCount(hashtags)) {
     return false;
   }
 
-  // Проверка на уникальность (регистронезависимая)
-  const uniqueHashtags = new Set(hashtags.map(tag => tag.toLowerCase()));
-  if (uniqueHashtags.size !== hashtags.length) {
+  // Проверка на уникальность
+  if (!validateHashtagUniqueness(hashtags)) {
     return false;
   }
 
   // Проверка каждого хэштега
-  const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
-
   return hashtags.every(hashtag => {
     // Проверка на пустой хэштег (только решетка)
     if (hashtag === '#') {
@@ -48,8 +59,40 @@ const validateHashtags = (value) => {
     }
 
     // Проверка формата хэштега
-    return hashtagRegex.test(hashtag);
+    return validateHashtagFormat(hashtag);
   });
+};
+
+// Функция для получения конкретной ошибки хэштегов
+const getHashtagErrorMessage = (value) => {
+  if (!value.trim()) {
+    return '';
+  }
+
+  const hashtags = value.trim().split(/\s+/).filter(tag => tag !== '');
+
+  // Проверка количества хэштегов
+  if (!validateHashtagCount(hashtags)) {
+    return 'Нельзя указать больше пяти хэштегов';
+  }
+
+  // Проверка уникальности
+  if (!validateHashtagUniqueness(hashtags)) {
+    return 'Один и тот же хэштег не может быть использован дважды';
+  }
+
+  // Проверка каждого хэштега
+  for (const hashtag of hashtags) {
+    if (hashtag === '#') {
+      return 'Хэштег не может состоять только из решётки';
+    }
+
+    if (!validateHashtagFormat(hashtag)) {
+      return 'Хэштег должен начинаться с # и содержать только буквы и цифры (макс. 20 символов)';
+    }
+  }
+
+  return '';
 };
 
 // Функция валидации комментария
@@ -61,7 +104,7 @@ const validateComment = (value) => {
 pristine.addValidator(
   hashtagInput,
   validateHashtags,
-  'Некорректный формат хэштегов. Хэштег должен начинаться с #, содержать только буквы и цифры, быть не длиннее 20 символов, максимум 5 уникальных хэштегов'
+  getHashtagErrorMessage
 );
 
 pristine.addValidator(
@@ -152,14 +195,4 @@ const initFormValidation = () => {
   commentInput.addEventListener('keydown', onCommentInputKeydown);
 };
 
-// Функция для удаления обработчиков (на случай уничтожения)
-const destroyFormValidation = () => {
-  uploadInput.removeEventListener('change', onFileInputChange);
-  cancelButton.removeEventListener('click', onCancelButtonClick);
-  form.removeEventListener('submit', onFormSubmit);
-  hashtagInput.removeEventListener('keydown', onHashtagInputKeydown);
-  commentInput.removeEventListener('keydown', onCommentInputKeydown);
-  document.removeEventListener('keydown', onDocumentKeydown);
-};
-
-export { initFormValidation, destroyFormValidation, showEditForm, hideEditForm, validateHashtags, validateComment };
+export { initFormValidation };

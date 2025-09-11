@@ -1,4 +1,3 @@
-// utils.js 
 import { MIN_ID, MAX_ID } from './constants.js';
 
 function getRandomInteger(min, max) {

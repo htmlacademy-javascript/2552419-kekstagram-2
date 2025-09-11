@@ -1,5 +1,4 @@
-// Параметры генерации
- const MIN_ID = 1;
+const MIN_ID = 1;
  const MAX_ID = 1000;
  const MIN_AVATAR_NUM = 1;
  const MAX_AVATAR_NUM = 6;
