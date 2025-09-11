@@ -1,4 +1,3 @@
-// comments.js
 import { generateUniqueIds } from './utils.js';
 import { MESSAGES, NAMES, MIN_AVATAR_NUM, MAX_AVATAR_NUM } from './constants.js';
 import { getRandomInteger } from './utils.js';

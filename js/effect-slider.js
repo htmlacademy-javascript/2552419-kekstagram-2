@@ -1,4 +1,3 @@
-// effect-slider.js
 const effectLevelContainerElement = document.querySelector('.img-upload__effect-level');
 const effectLevelSliderElement = document.querySelector('.effect-level__slider');
 const effectLevelValueElement = document.querySelector('.effect-level__value');

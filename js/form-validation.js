@@ -1,4 +1,3 @@
-// form-validation.js
 import { isEscapeKey } from './utils.js';
 
 const formElement = document.querySelector('.img-upload__form');
@@ -19,52 +18,123 @@ const pristine = new Pristine(formElement, {
   errorTextClass: 'img-upload__error'
 });
 
-// Функция валидации хэштегов
-const validateHashtags = (value) => {
+// Функции для получения хэштегов из значения
+const getHashtagsArray = (value) => {
+  return value.trim().split(/\s+/).filter((tag) => tag !== '');
+};
+
+// Валидаторы для разных типов ошибок хэштегов
+const validateHashtagsEmpty = (value) => {
   if (!value.trim()) {
     return true; // хэштеги не обязательны
   }
+  return getHashtagsArray(value).length > 0;
+};
 
-  const hashtags = value.trim().split(/\s+/).filter((tag) => tag !== '');
+const validateHashtagsCount = (value) => {
+  if (!value.trim()) {
+    return true;
+  }
+  const hashtags = getHashtagsArray(value);
+  return hashtags.length <= 5;
+};
 
-  // Проверка на максимальное количество хэштегов
-  if (hashtags.length > 5) {
-    return false;
+const validateHashtagsFormat = (value) => {
+  if (!value.trim()) {
+    return true;
   }
 
-  // Проверка на уникальность (регистронезависимая)
-  const uniqueHashtags = new Set(hashtags.map((tag) => tag.toLowerCase()));
-  if (uniqueHashtags.size !== hashtags.length) {
-    return false;
-  }
-
-  // Проверка каждого хэштега
+  const hashtags = getHashtagsArray(value);
   const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
 
-  return hashtags.every((hashtag) => {
+  for (const hashtag of hashtags) {
     // Проверка на пустой хэштег (только решетка)
     if (hashtag === '#') {
       return false;
     }
 
     // Проверка формата хэштега
-    return hashtagRegex.test(hashtag);
-  });
+    if (!hashtagRegex.test(hashtag)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const validateHashtagsLength = (value) => {
+  if (!value.trim()) {
+    return true;
+  }
+
+  const hashtags = getHashtagsArray(value);
+
+  for (const hashtag of hashtags) {
+    if (hashtag.length > 20) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const validateHashtagsUniqueness = (value) => {
+  if (!value.trim()) {
+    return true;
+  }
+
+  const hashtags = getHashtagsArray(value);
+  const uniqueHashtags = new Set(hashtags.map((tag) => tag.toLowerCase()));
+  return uniqueHashtags.size === hashtags.length;
 };
 
 // Функция валидации комментария
-const validateComment = (value) => value.length <= 140;
+const validateCommentLength = (value) => value.length <= 140;
 
-// Добавление кастомных валидаторов
+// Добавление кастомных валидаторов с разными сообщениями
 pristine.addValidator(
   hashtagInputElement,
-  validateHashtags,
-  'Некорректный формат хэштегов. Хэштег должен начинаться с #, содержать только буквы и цифры, быть не длиннее 20 символов, максимум 5 уникальных хэштегов'
+  validateHashtagsEmpty,
+  'Хэштег не может состоять только из одной решётки',
+  1,
+  false
+);
+
+pristine.addValidator(
+  hashtagInputElement,
+  validateHashtagsCount,
+  'Нельзя указать больше пяти хэштегов',
+  2,
+  false
+);
+
+pristine.addValidator(
+  hashtagInputElement,
+  validateHashtagsFormat,
+  'Хэштег должен начинаться с # и содержать только буквы и цифры без пробелов и спецсимволов',
+  3,
+  false
+);
+
+pristine.addValidator(
+  hashtagInputElement,
+  validateHashtagsLength,
+  'Максимальная длина одного хэштега - 20 символов, включая решётку',
+  4,
+  false
+);
+
+pristine.addValidator(
+  hashtagInputElement,
+  validateHashtagsUniqueness,
+  'Один и тот же хэштег не может быть использован дважды (регистр не учитывается)',
+  5,
+  false
 );
 
 pristine.addValidator(
   commentInputElement,
-  validateComment,
+  validateCommentLength,
   'Комментарий не может быть длиннее 140 символов'
 );
 
@@ -134,7 +204,9 @@ const onFormSubmit = (evt) => {
 
     // Здесь будет отправка формы на сервер
     setTimeout(() => {
-      formElement.submit();
+      // В реальном коде здесь будет fetch запрос
+      console.log('Форма отправлена');
+      hideEditForm();
       submitButtonElement.disabled = false;
       submitButtonElement.textContent = 'Опубликовать';
     }, 1000);
@@ -160,5 +232,4 @@ const destroyFormValidation = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-export { initFormValidation, destroyFormValidation, showEditForm, hideEditForm, validateHashtags, validateComment };
-
+export { initFormValidation, destroyFormValidation };

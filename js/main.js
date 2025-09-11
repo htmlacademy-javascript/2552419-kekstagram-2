@@ -9,4 +9,3 @@ renderThumbnails(photos);
 initFormValidation();
 initEffects();
 initScale();
-

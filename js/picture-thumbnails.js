@@ -1,4 +1,3 @@
-// picture-thumbnails.js
 import { openBigPicture } from './big-picture.js';
 
 const renderThumbnails = (photosData) => {

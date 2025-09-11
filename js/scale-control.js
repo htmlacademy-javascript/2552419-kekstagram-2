@@ -1,4 +1,3 @@
-// scale-control.js
 const SCALE_STEP = 25;
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;

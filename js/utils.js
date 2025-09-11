@@ -1,4 +1,3 @@
-// utils.js
 import { MIN_ID, MAX_ID } from './constants.js';
 
 const getRandomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;

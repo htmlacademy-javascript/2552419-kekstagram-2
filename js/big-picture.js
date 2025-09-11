@@ -1,4 +1,3 @@
-// big-picture.js
 import { isEscapeKey } from './utils.js';
 
 const bigPictureElement = document.querySelector('.big-picture');
