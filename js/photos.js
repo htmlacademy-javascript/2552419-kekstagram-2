@@ -1,4 +1,3 @@
-// photos.js
 import { PHOTOS_COUNT, DESCRIPTIONS, MIN_LIKES, MAX_LIKES, MIN_COMMENTS, MAX_COMMENTS } from './constants.js';
 import { getRandomInteger } from './utils.js';
 import { generateComments } from './comments.js';
