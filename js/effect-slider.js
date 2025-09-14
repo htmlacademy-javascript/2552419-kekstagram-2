@@ -64,15 +64,14 @@ const updateEffect = (value) => {
   if (currentEffect === 'none') {
     imagePreviewElement.style.filter = 'none';
     effectLevelContainerElement.classList.add('hidden');
+    effectLevelValueElement.value = '';
   } else {
     const effect = Effects[currentEffect.toUpperCase()];
     const filterValue = effect.unit ? `${value}${effect.unit}` : value;
     imagePreviewElement.style.filter = `${effect.filter}(${filterValue})`;
     effectLevelContainerElement.classList.remove('hidden');
+    effectLevelValueElement.value = value;
   }
-
-  // Записываем значение в скрытое поле для отправки на сервер
-  effectLevelValueElement.value = value;
 };
 
 // Создание слайдера
@@ -110,6 +109,10 @@ const initEffectHandlers = () => {
         effectLevelContainerElement.classList.add('hidden');
         imagePreviewElement.style.filter = 'none';
         effectLevelValueElement.value = '';
+        if (slider) {
+          slider.destroy();
+          slider = null;
+        }
       } else {
         createSlider();
         effectLevelContainerElement.classList.remove('hidden');
@@ -119,19 +122,36 @@ const initEffectHandlers = () => {
   });
 };
 
+// Сброс эффектов
+const resetEffects = () => {
+  currentEffect = 'none';
+  imagePreviewElement.style.filter = 'none';
+  effectLevelContainerElement.classList.add('hidden');
+  effectLevelValueElement.value = '';
+
+  // Сброс выбора радио-кнопок
+  const noneRadioElement = document.querySelector('#effect-none');
+  if (noneRadioElement) {
+    noneRadioElement.checked = true;
+  }
+
+  // Уничтожение слайдера
+  if (slider) {
+    slider.destroy();
+    slider = null;
+  }
+};
+
 // Инициализация
 const initEffects = () => {
   // Скрываем слайдер по умолчанию
   effectLevelContainerElement.classList.add('hidden');
 
   // Устанавливаем эффект по умолчанию
-  const noneRadioElement = document.querySelector('#effect-none');
-  if (noneRadioElement) {
-    noneRadioElement.checked = true;
-  }
+  resetEffects();
 
   // Инициализируем обработчики
   initEffectHandlers();
 };
 
-export { initEffects };
+export { initEffects, resetEffects };

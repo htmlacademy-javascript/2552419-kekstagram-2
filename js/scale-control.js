@@ -29,6 +29,11 @@ const onScaleControlBiggerClick = () => {
   updateScale(newScale);
 };
 
+// Сброс масштаба
+const resetScale = () => {
+  updateScale(SCALE_DEFAULT);
+};
+
 // Инициализация масштаба
 const initScale = () => {
   const scaleControlSmallerElement = document.querySelector('.scale__control--smaller');
@@ -40,8 +45,8 @@ const initScale = () => {
     scaleControlBiggerElement.addEventListener('click', onScaleControlBiggerClick);
 
     // Инициализация масштаба по умолчанию
-    updateScale(SCALE_DEFAULT);
+    resetScale();
   }
 };
 
-export { initScale };
+export { initScale, resetScale };
