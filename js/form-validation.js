@@ -1,6 +1,8 @@
 import { resetEffects } from './effect-slider.js';
 import { resetScale } from './scale-control.js';
 import { isEscapeKey } from './utils.js';
+import { sendData } from './api.js';
+import { showSuccessMessage, showErrorMessage } from './messages.js';
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = document.querySelector('#upload-file');
@@ -198,7 +200,7 @@ const onCancelButtonClick = () => {
 };
 
 // Обработчик отправки формы
-const onFormSubmit = (evt) => {
+const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
   const isValid = pristine.validate();
@@ -208,14 +210,27 @@ const onFormSubmit = (evt) => {
     submitButtonElement.disabled = true;
     submitButtonElement.textContent = 'Отправка...';
 
-    // Здесь будет отправка формы на сервер
-    setTimeout(() => {
-      // В реальном коде здесь будет fetch запрос
-      console.log('Форма отправлена');
+    try {
+      // Создаем FormData из формы
+      const formData = new FormData(formElement);
+
+      // Отправляем данные на сервер
+      await sendData(formData);
+
+      // Показываем сообщение об успехе
+      showSuccessMessage();
+
+      // Закрываем форму и сбрасываем состояние
       hideEditForm();
+    } catch (error) {
+      // Показываем сообщение об ошибке
+      showErrorMessage();
+      console.error('Ошибка отправки формы:', error);
+    } finally {
+      // Разблокируем кнопку
       submitButtonElement.disabled = false;
       submitButtonElement.textContent = 'Опубликовать';
-    }, 1000);
+    }
   }
 };
 
@@ -236,6 +251,6 @@ const destroyFormValidation = () => {
   hashtagInputElement.removeEventListener('keydown', onHashtagInputKeydown);
   commentInputElement.removeEventListener('keydown', onCommentInputKeydown);
   document.removeEventListener('keydown', onDocumentKeydown);
-};
+};// Обработчик отправки формы
 
 export { initFormValidation, destroyFormValidation };

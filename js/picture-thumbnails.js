@@ -3,6 +3,11 @@ import { openBigPicture } from './big-picture.js';
 const renderThumbnails = (photosData) => {
   const picturesContainerElement = document.querySelector('.pictures');
   const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
+
+  // Очищаем контейнер перед добавлением новых миниатюр
+  const existingPictures = picturesContainerElement.querySelectorAll('.picture');
+  existingPictures.forEach(picture => picture.remove());
+
   const fragment = document.createDocumentFragment();
 
   photosData.forEach((photo) => {
@@ -28,3 +33,4 @@ const renderThumbnails = (photosData) => {
 };
 
 export { renderThumbnails };
+
