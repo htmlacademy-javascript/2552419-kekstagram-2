@@ -1,3 +1,5 @@
+import { resetEffects } from './effect-slider.js';
+import { resetScale } from './scale-control.js';
 import { isEscapeKey } from './utils.js';
 
 const formElement = document.querySelector('.img-upload__form');
@@ -11,7 +13,7 @@ const submitButtonElement = document.querySelector('#upload-submit');
 // Инициализация Pristine
 const pristine = new Pristine(formElement, {
   classTo: 'img-upload__field-wrapper',
-  errorClass: 'img-upload__field-wrapper--invalid',
+  errorClass: 'img-upload__field-wrapper--error',
   successClass: 'img-upload__field-wrapper--valid',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
@@ -179,6 +181,10 @@ const hideEditForm = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
   formElement.reset();
   pristine.reset();
+
+  // Сброс эффектов и масштаба
+  resetEffects();
+  resetScale();
 };
 
 // Обработчик изменения файла
