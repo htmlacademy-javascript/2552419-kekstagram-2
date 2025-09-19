@@ -25,118 +25,98 @@ const getHashtagsArray = (value) => {
   return value.trim().split(/\s+/).filter((tag) => tag !== '');
 };
 
-// Валидаторы для разных типов ошибок хэштегов
-const validateHashtagsEmpty = (value) => {
-  if (!value.trim()) {
-    return true; // хэштеги не обязательны
-  }
-  return getHashtagsArray(value).length > 0;
+// Валидаторы для хэштегов
+const validateHashtagFormat = (hashtag) => {
+  const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
+  return hashtagRegex.test(hashtag);
 };
 
-const validateHashtagsCount = (value) => {
-  if (!value.trim()) {
-    return true;
-  }
-  const hashtags = getHashtagsArray(value);
+const validateHashtagCount = (hashtags) => {
   return hashtags.length <= 5;
 };
 
-const validateHashtagsFormat = (value) => {
+const validateHashtagUniqueness = (hashtags) => {
+  const uniqueHashtags = new Set(hashtags.map(tag => tag.toLowerCase()));
+  return uniqueHashtags.size === hashtags.length;
+};
+
+// Основная функция валидации хэштегов
+const validateHashtags = (value) => {
   if (!value.trim()) {
-    return true;
+    return true; // хэштеги не обязательны
   }
 
   const hashtags = getHashtagsArray(value);
-  const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
 
-  for (const hashtag of hashtags) {
+  // Проверка на максимальное количество хэштегов
+  if (!validateHashtagCount(hashtags)) {
+    return false;
+  }
+
+  // Проверка на уникальность
+  if (!validateHashtagUniqueness(hashtags)) {
+    return false;
+  }
+
+  // Проверка каждого хэштега
+  return hashtags.every(hashtag => {
     // Проверка на пустой хэштег (только решетка)
     if (hashtag === '#') {
       return false;
     }
 
     // Проверка формата хэштега
-    if (!hashtagRegex.test(hashtag)) {
-      return false;
-    }
-  }
-
-  return true;
+    return validateHashtagFormat(hashtag);
+  });
 };
 
-const validateHashtagsLength = (value) => {
+// Функция для получения конкретной ошибки хэштегов
+const getHashtagErrorMessage = (value) => {
   if (!value.trim()) {
-    return true;
+    return '';
   }
 
   const hashtags = getHashtagsArray(value);
 
+  // Проверка количества хэштегов
+  if (!validateHashtagCount(hashtags)) {
+    return 'Нельзя указать больше пяти хэштегов';
+  }
+
+  // Проверка уникальности
+  if (!validateHashtagUniqueness(hashtags)) {
+    return 'Один и тот же хэштег не может быть использован дважды';
+  }
+
+  // Проверка каждого хэштега
   for (const hashtag of hashtags) {
-    if (hashtag.length > 20) {
-      return false;
+    if (hashtag === '#') {
+      return 'Хэштег не может состоять только из решётки';
+    }
+
+    if (!validateHashtagFormat(hashtag)) {
+      return 'Хэштег должен начинаться с # и содержать только буквы и цифры (макс. 20 символов)';
     }
   }
 
-  return true;
-};
-
-const validateHashtagsUniqueness = (value) => {
-  if (!value.trim()) {
-    return true;
-  }
-
-  const hashtags = getHashtagsArray(value);
-  const uniqueHashtags = new Set(hashtags.map((tag) => tag.toLowerCase()));
-  return uniqueHashtags.size === hashtags.length;
+  return '';
 };
 
 // Функция валидации комментария
-const validateCommentLength = (value) => value.length <= 140;
+const validateComment = (value) => {
+  return value.length <= 140;
+};
 
-// Добавление кастомных валидаторов с разными сообщениями
+// Добавление валидаторов
 pristine.addValidator(
   hashtagInputElement,
-  validateHashtagsEmpty,
-  'Хэштег не может состоять только из одной решётки',
-  1,
-  false
-);
-
-pristine.addValidator(
-  hashtagInputElement,
-  validateHashtagsCount,
-  'Нельзя указать больше пяти хэштегов',
-  2,
-  false
-);
-
-pristine.addValidator(
-  hashtagInputElement,
-  validateHashtagsFormat,
-  'Хэштег должен начинаться с # и содержать только буквы и цифры без пробелов и спецсимволов',
-  3,
-  false
-);
-
-pristine.addValidator(
-  hashtagInputElement,
-  validateHashtagsLength,
-  'Максимальная длина одного хэштега - 20 символов, включая решётку',
-  4,
-  false
-);
-
-pristine.addValidator(
-  hashtagInputElement,
-  validateHashtagsUniqueness,
-  'Один и тот же хэштег не может быть использован дважды (регистр не учитывается)',
-  5,
-  false
+  validateHashtags,
+  getHashtagErrorMessage
 );
 
 pristine.addValidator(
   commentInputElement,
-  validateCommentLength,
+  validateComment,
   'Комментарий не может быть длиннее 140 символов'
 );
 
