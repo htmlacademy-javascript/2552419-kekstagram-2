@@ -2,7 +2,7 @@ import { PHOTOS_COUNT, DESCRIPTIONS, MIN_LIKES, MAX_LIKES, MIN_COMMENTS, MAX_COM
 import { getRandomInteger } from './utils.js';
 import { generateComments } from './comments.js';
 
- const generatePhotos = () => Array.from({length: PHOTOS_COUNT}, (_, i) => ({
+const generatePhotos = () => Array.from({length: PHOTOS_COUNT}, (_, i) => ({
   id: i + 1,
   url: `photos/${i + 1}.jpg`,
   description: DESCRIPTIONS[getRandomInteger(0, DESCRIPTIONS.length - 1)],
