@@ -12,4 +12,8 @@ const generateComments = (count) => {
   }));
 };
 
+module9-task2
 export { generateComments };
+
+export {generateComments};
+master
