@@ -24,7 +24,7 @@ const showDataError = (message) => {
     }
   }
 
-  document.body.appendChild(dataErrorElement);
+  document.body.append(dataErrorElement);
 
   setTimeout(() => {
     const existingError = document.querySelector('.data-error');
@@ -34,15 +34,15 @@ const showDataError = (message) => {
   }, 5000);
 };
 
-function debounce(callback, timeoutDelay = 500) {
+const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
-function throttle(callback, delayBetweenFrames) {
+const throttle = (callback, delayBetweenFrames) => {
   let lastTime = 0;
   return (...rest) => {
     const now = new Date();
@@ -51,7 +51,7 @@ function throttle(callback, delayBetweenFrames) {
       lastTime = now;
     }
   };
-}
+};
 
 export {
   getRandomInteger,

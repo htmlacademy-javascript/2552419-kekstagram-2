@@ -5,7 +5,7 @@ const RANDOM_PHOTOS_COUNT = 10;
 const FILTER_DEBOUNCE_DELAY = 500;
 
 const filtersContainer = document.querySelector('.img-filters');
-const filterButtons = filtersContainer.querySelectorAll('.img-filters__button');
+const filterForm = filtersContainer.querySelector('.img-filters__form');
 let currentPhotos = [];
 
 const FilterType = {
@@ -19,12 +19,12 @@ const showFilters = () => {
 };
 
 const getRandomPhotos = (photos) => {
-  const shuffled = photos.slice().sort(() => Math.random() - 0.5);
+  const shuffled = [...photos].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, RANDOM_PHOTOS_COUNT);
 };
 
 const getDiscussedPhotos = (photos) => {
-  return photos.slice().sort((a, b) => b.comments.length - a.comments.length);
+  return [...photos].sort((a, b) => b.comments.length - a.comments.length);
 };
 
 const applyFilter = (filterType) => {
@@ -47,17 +47,15 @@ const applyFilter = (filterType) => {
 
 const debouncedApplyFilter = debounce(applyFilter, FILTER_DEBOUNCE_DELAY);
 
-const onFilterButtonClick = (evt) => {
+const onFilterChange = (evt) => {
   const target = evt.target;
 
   if (!target.matches('.img-filters__button')) {
     return;
   }
 
-  const activeButton = filtersContainer.querySelector('.img-filters__button--active');
-  if (activeButton) {
-    activeButton.classList.remove('img-filters__button--active');
-  }
+  const activeButton = filterForm.querySelector('.img-filters__button--active');
+  activeButton.classList.remove('img-filters__button--active');
 
   target.classList.add('img-filters__button--active');
   debouncedApplyFilter(target.id);
@@ -67,7 +65,7 @@ const initFilters = (photos) => {
   currentPhotos = photos;
   showFilters();
 
-  filtersContainer.addEventListener('click', onFilterButtonClick);
+  filterForm.addEventListener('click', onFilterChange);
 };
 
 export { initFilters };

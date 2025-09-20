@@ -15,7 +15,6 @@ const ErrorText = {
   SEND_DATA: 'Не удалось отправить форму. Попробуйте ещё раз',
 };
 
-// Функция для выполнения запросов к серверу
 const loadData = async (route, errorText, method = Method.GET, body = null) => {
   try {
     const response = await fetch(`${BASE_URL}${route}`, {
@@ -33,10 +32,10 @@ const loadData = async (route, errorText, method = Method.GET, body = null) => {
   }
 };
 
-// Функция для получения данных с сервера
 const getData = () => loadData(Route.GET_DATA, ErrorText.GET_DATA);
 
-// Функция для отправки данных на сервер
 const sendData = (body) => loadData(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body);
 
 export { getData, sendData };
+
+

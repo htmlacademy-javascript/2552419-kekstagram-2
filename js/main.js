@@ -20,9 +20,7 @@ const initApp = async () => {
     initScale();
   } catch (error) {
     showDataLoadError();
-    console.error('Ошибка загрузки данных:', error);
   }
 };
 
 initApp();
-
