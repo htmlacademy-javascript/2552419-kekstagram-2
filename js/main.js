@@ -4,22 +4,17 @@ import { initEffects } from './effect-slider.js';
 import { initScale } from './scale-control.js';
 import { getData } from './api.js';
 import { showDataError } from './utils.js';
+import { initFilters } from './filters.js';
 
-// Функция для показа ошибки загрузки данных
 const showDataLoadError = () => {
   showDataError('Не удалось загрузить фотографии. Попробуйте обновить страницу');
 };
 
-// Инициализация приложения
 const initApp = async () => {
   try {
-    // Загружаем данные с сервера
     const photos = await getData();
-
-    // Отрисовываем миниатюры
     renderThumbnails(photos);
-
-    // Инициализируем остальные модули
+    initFilters(photos);
     initFormValidation();
     initEffects();
     initScale();
@@ -29,5 +24,5 @@ const initApp = async () => {
   }
 };
 
-// Запускаем приложение
 initApp();
+
