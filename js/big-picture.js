@@ -113,20 +113,5 @@ const openBigPicture = (photo) => {
   commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
 };
 
- module9-task2
-
-// Обработчик клавиши Esc
-function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
-}
-
-// Обработчик клика по кнопке закрытия
-function onCloseButtonClick() {
-  closeBigPicture();
-}
-
-
 export { openBigPicture };
+
