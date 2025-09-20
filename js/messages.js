@@ -1,13 +1,12 @@
 import { isEscapeKey } from './utils.js';
 
-// Функция для показа сообщения об успехе
 const showSuccessMessage = () => {
   const successTemplate = document.querySelector('#success');
   const successElement = successTemplate.content.cloneNode(true);
   const successModal = successElement.querySelector('.success');
   const successButton = successElement.querySelector('.success__button');
 
-  document.body.appendChild(successElement);
+  document.body.append(successElement);
 
   const closeSuccessModal = () => {
     successModal.remove();
@@ -33,14 +32,18 @@ const showSuccessMessage = () => {
   document.addEventListener('click', onDocumentClick);
 };
 
-// Функция для показа сообщения об ошибке
-const showErrorMessage = () => {
+const showErrorMessage = (customMessage = null) => {
   const errorTemplate = document.querySelector('#error');
   const errorElement = errorTemplate.content.cloneNode(true);
   const errorModal = errorElement.querySelector('.error');
   const errorButton = errorElement.querySelector('.error__button');
+  const errorTitle = errorElement.querySelector('.error__title');
 
-  document.body.appendChild(errorElement);
+  if (customMessage && errorTitle) {
+    errorTitle.textContent = customMessage;
+  }
+
+  document.body.append(errorElement);
 
   const closeErrorModal = () => {
     errorModal.remove();
@@ -52,14 +55,12 @@ const showErrorMessage = () => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       closeErrorModal();
-      // НЕ закрываем форму редактирования!
     }
   };
 
   const onDocumentClick = (evt) => {
     if (!evt.target.closest('.error__inner')) {
       closeErrorModal();
-      // НЕ закрываем форму редактирования!
     }
   };
 
@@ -69,3 +70,4 @@ const showErrorMessage = () => {
 };
 
 export { showSuccessMessage, showErrorMessage };
+

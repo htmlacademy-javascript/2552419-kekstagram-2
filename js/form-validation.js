@@ -11,6 +11,13 @@ const cancelButtonElement = document.querySelector('#upload-cancel');
 const hashtagInputElement = document.querySelector('.text__hashtags');
 const commentInputElement = document.querySelector('.text__description');
 const submitButtonElement = document.querySelector('#upload-submit');
+const imagePreviewElement = document.querySelector('.img-upload__preview img');
+const effectsPreviews = document.querySelectorAll('.effects__preview');
+
+const MAX_HASHTAG_COUNT = 5;
+const MAX_HASHTAG_LENGTH = 20;
+const MAX_COMMENT_LENGTH = 140;
+const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 const pristine = new Pristine(formElement, {
   classTo: 'img-upload__field-wrapper',
@@ -25,52 +32,43 @@ const getHashtagsArray = (value) => {
   return value.trim().split(/\s+/).filter((tag) => tag !== '');
 };
 
-// Валидаторы для хэштегов
 const validateHashtagFormat = (hashtag) => {
   const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
   return hashtagRegex.test(hashtag);
 };
 
 const validateHashtagCount = (hashtags) => {
-  return hashtags.length <= 5;
+  return hashtags.length <= MAX_HASHTAG_COUNT;
 };
 
 const validateHashtagUniqueness = (hashtags) => {
-  const uniqueHashtags = new Set(hashtags.map(tag => tag.toLowerCase()));
+  const uniqueHashtags = new Set(hashtags.map((tag) => tag.toLowerCase()));
   return uniqueHashtags.size === hashtags.length;
 };
 
-// Основная функция валидации хэштегов
 const validateHashtags = (value) => {
   if (!value.trim()) {
-    return true; // хэштеги не обязательны
+    return true;
   }
 
   const hashtags = getHashtagsArray(value);
 
-  // Проверка на максимальное количество хэштегов
   if (!validateHashtagCount(hashtags)) {
     return false;
   }
 
-  // Проверка на уникальность
   if (!validateHashtagUniqueness(hashtags)) {
     return false;
   }
 
-  // Проверка каждого хэштега
-  return hashtags.every(hashtag => {
-    // Проверка на пустой хэштег (только решетка)
+  return hashtags.every((hashtag) => {
     if (hashtag === '#') {
       return false;
     }
-
-    // Проверка формата хэштега
     return validateHashtagFormat(hashtag);
   });
 };
 
-// Функция для получения конкретной ошибки хэштегов
 const getHashtagErrorMessage = (value) => {
   if (!value.trim()) {
     return '';
@@ -78,17 +76,14 @@ const getHashtagErrorMessage = (value) => {
 
   const hashtags = getHashtagsArray(value);
 
-  // Проверка количества хэштегов
   if (!validateHashtagCount(hashtags)) {
     return 'Нельзя указать больше пяти хэштегов';
   }
 
-  // Проверка уникальности
   if (!validateHashtagUniqueness(hashtags)) {
     return 'Один и тот же хэштег не может быть использован дважды';
   }
 
-  // Проверка каждого хэштега
   for (const hashtag of hashtags) {
     if (hashtag === '#') {
       return 'Хэштег не может состоять только из решётки';
@@ -102,12 +97,10 @@ const getHashtagErrorMessage = (value) => {
   return '';
 };
 
-// Функция валидации комментария
 const validateComment = (value) => {
-  return value.length <= 140;
+  return value.length <= MAX_COMMENT_LENGTH;
 };
 
-// Добавление валидаторов
 pristine.addValidator(
   hashtagInputElement,
   validateHashtags,
@@ -119,6 +112,25 @@ pristine.addValidator(
   validateComment,
   'Комментарий не может быть длиннее 140 символов'
 );
+
+const loadUserImage = (file) => {
+  const reader = new FileReader();
+
+  const onLoad = () => {
+    const result = reader.result;
+    imagePreviewElement.src = result;
+    effectsPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url(${result})`;
+    });
+  };
+
+  reader.addEventListener('load', onLoad);
+  reader.readAsDataURL(file);
+};
+
+const isValidFileType = (file) => {
+  return VALID_FILE_TYPES.includes(file.type);
+};
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -170,9 +182,27 @@ const hideEditForm = () => {
   pristine.reset();
   resetEffects();
   resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
 };
 
-const onFileInputChange = () => {
+const onFileInputChange = (evt) => {
+  const file = evt.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  if (!isValidFileType(file)) {
+    showErrorMessage('Пожалуйста, выберите файл изображения (JPEG, PNG, WebP или GIF)');
+    uploadInputElement.value = '';
+    return;
+  }
+
+  loadUserImage(file);
   showEditForm();
 };
 
@@ -196,7 +226,6 @@ const onFormSubmit = async (evt) => {
       hideEditForm();
     } catch (error) {
       showErrorMessage();
-      console.error('Ошибка отправки формы:', error);
     } finally {
       submitButtonElement.disabled = false;
       submitButtonElement.textContent = 'Опубликовать';
@@ -228,3 +257,4 @@ const destroyFormValidation = () => {
 };
 
 export { initFormValidation, destroyFormValidation };
+

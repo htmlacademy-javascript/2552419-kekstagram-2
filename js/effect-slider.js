@@ -4,9 +4,17 @@ const effectLevelValueElement = document.querySelector('.effect-level__value');
 const effectRadiosElements = document.querySelectorAll('.effects__radio');
 const imagePreviewElement = document.querySelector('.img-upload__preview img');
 
-// Настройки эффектов
-const Effects = {
-  NONE: {
+const Effect = {
+  NONE: 'none',
+  CHROME: 'chrome',
+  SEPIA: 'sepia',
+  MARVIN: 'marvin',
+  PHOBOS: 'phobos',
+  HEAT: 'heat'
+};
+
+const EffectConfig = {
+  [Effect.NONE]: {
     filter: 'none',
     unit: '',
     min: 0,
@@ -14,7 +22,7 @@ const Effects = {
     step: 1,
     start: 100
   },
-  CHROME: {
+  [Effect.CHROME]: {
     filter: 'grayscale',
     unit: '',
     min: 0,
@@ -22,7 +30,7 @@ const Effects = {
     step: 0.1,
     start: 1
   },
-  SEPIA: {
+  [Effect.SEPIA]: {
     filter: 'sepia',
     unit: '',
     min: 0,
@@ -30,7 +38,7 @@ const Effects = {
     step: 0.1,
     start: 1
   },
-  MARVIN: {
+  [Effect.MARVIN]: {
     filter: 'invert',
     unit: '%',
     min: 0,
@@ -38,7 +46,7 @@ const Effects = {
     step: 1,
     start: 100
   },
-  PHOBOS: {
+  [Effect.PHOBOS]: {
     filter: 'blur',
     unit: 'px',
     min: 0,
@@ -46,7 +54,7 @@ const Effects = {
     step: 0.1,
     start: 3
   },
-  HEAT: {
+  [Effect.HEAT]: {
     filter: 'brightness',
     unit: '',
     min: 1,
@@ -56,17 +64,16 @@ const Effects = {
   }
 };
 
-let currentEffect = 'none';
+let currentEffect = Effect.NONE;
 let slider = null;
 
-// Функция для обновления эффекта
 const updateEffect = (value) => {
-  if (currentEffect === 'none') {
+  if (currentEffect === Effect.NONE) {
     imagePreviewElement.style.filter = 'none';
     effectLevelContainerElement.classList.add('hidden');
     effectLevelValueElement.value = '';
   } else {
-    const effect = Effects[currentEffect.toUpperCase()];
+    const effect = EffectConfig[currentEffect];
     const filterValue = effect.unit ? `${value}${effect.unit}` : value;
     imagePreviewElement.style.filter = `${effect.filter}(${filterValue})`;
     effectLevelContainerElement.classList.remove('hidden');
@@ -74,13 +81,12 @@ const updateEffect = (value) => {
   }
 };
 
-// Создание слайдера
 const createSlider = () => {
   if (slider) {
     slider.destroy();
   }
 
-  const effect = Effects[currentEffect.toUpperCase()];
+  const effect = EffectConfig[currentEffect];
 
   slider = noUiSlider.create(effectLevelSliderElement, {
     range: {
@@ -92,20 +98,18 @@ const createSlider = () => {
     connect: 'lower'
   });
 
-  // Обработчик изменения слайдера
   slider.on('update', () => {
     const value = slider.get();
     updateEffect(value);
   });
 };
 
-// Обработчики для переключения эффектов
 const initEffectHandlers = () => {
   effectRadiosElements.forEach((radio) => {
     radio.addEventListener('change', (evt) => {
       currentEffect = evt.target.value;
 
-      if (currentEffect === 'none') {
+      if (currentEffect === Effect.NONE) {
         effectLevelContainerElement.classList.add('hidden');
         imagePreviewElement.style.filter = 'none';
         effectLevelValueElement.value = '';
@@ -116,41 +120,30 @@ const initEffectHandlers = () => {
       } else {
         createSlider();
         effectLevelContainerElement.classList.remove('hidden');
-        updateEffect(Effects[currentEffect.toUpperCase()].start);
+        updateEffect(EffectConfig[currentEffect].start);
       }
     });
   });
 };
 
-// Сброс эффектов
 const resetEffects = () => {
-  currentEffect = 'none';
+  currentEffect = Effect.NONE;
   imagePreviewElement.style.filter = 'none';
   effectLevelContainerElement.classList.add('hidden');
   effectLevelValueElement.value = '';
 
-  // Сброс выбора радио-кнопок
   const noneRadioElement = document.querySelector('#effect-none');
-  if (noneRadioElement) {
-    noneRadioElement.checked = true;
-  }
+  noneRadioElement.checked = true;
 
-  // Уничтожение слайдера
   if (slider) {
     slider.destroy();
     slider = null;
   }
 };
 
-// Инициализация
 const initEffects = () => {
-  // Скрываем слайдер по умолчанию
   effectLevelContainerElement.classList.add('hidden');
-
-  // Устанавливаем эффект по умолчанию
   resetEffects();
-
-  // Инициализируем обработчики
   initEffectHandlers();
 };
 

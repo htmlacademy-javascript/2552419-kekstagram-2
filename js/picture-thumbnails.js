@@ -5,7 +5,7 @@ const pictureTemplateElement = document.querySelector('#picture').content.queryS
 
 const clearThumbnails = () => {
   const existingPictures = picturesContainerElement.querySelectorAll('.picture');
-  existingPictures.forEach(picture => picture.remove());
+  existingPictures.forEach((picture) => picture.remove());
 };
 
 const renderThumbnails = (photosData) => {
@@ -15,11 +15,14 @@ const renderThumbnails = (photosData) => {
 
   photosData.forEach((photo) => {
     const thumbnail = pictureTemplateElement.cloneNode(true);
+    const imageElement = thumbnail.querySelector('.picture__img');
+    const likesElement = thumbnail.querySelector('.picture__likes');
+    const commentsElement = thumbnail.querySelector('.picture__comments');
 
-    thumbnail.querySelector('.picture__img').src = photo.url;
-    thumbnail.querySelector('.picture__img').alt = photo.description;
-    thumbnail.querySelector('.picture__likes').textContent = photo.likes;
-    thumbnail.querySelector('.picture__comments').textContent = photo.comments.length;
+    imageElement.src = photo.url;
+    imageElement.alt = photo.description;
+    likesElement.textContent = photo.likes;
+    commentsElement.textContent = photo.comments.length;
 
     const onThumbnailClick = (evt) => {
       evt.preventDefault();
@@ -27,12 +30,11 @@ const renderThumbnails = (photosData) => {
     };
 
     thumbnail.addEventListener('click', onThumbnailClick);
-    fragment.appendChild(thumbnail);
+    fragment.append(thumbnail);
   });
 
-  picturesContainerElement.appendChild(fragment);
+  picturesContainerElement.append(fragment);
 };
 
 export { renderThumbnails };
-
 
