@@ -145,6 +145,13 @@ pristine.addValidator(
 // Обработчик клавиши Esc
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
+    // Не закрываем форму, если открыто сообщение об ошибке
+    const errorModal = document.querySelector('.error');
+    if (errorModal) {
+      evt.stopPropagation();
+      return;
+    }
+
     // Не закрываем форму, если фокус в полях ввода
     if (document.activeElement === hashtagInputElement || document.activeElement === commentInputElement) {
       evt.stopPropagation();
@@ -159,13 +166,21 @@ const onDocumentKeydown = (evt) => {
 // Обработчики для отмены propagation при фокусе
 const onHashtagInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
-    evt.stopPropagation();
+    // Не даем Esc закрыть сообщение об ошибке, если оно открыто
+    const errorModal = document.querySelector('.error');
+    if (errorModal) {
+      evt.stopPropagation();
+    }
   }
 };
 
 const onCommentInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
-    evt.stopPropagation();
+    // Не даем Esc закрыть сообщение об ошибке, если оно открыто
+    const errorModal = document.querySelector('.error');
+    if (errorModal) {
+      evt.stopPropagation();
+    }
   }
 };
 
@@ -223,7 +238,7 @@ const onFormSubmit = async (evt) => {
       // Закрываем форму и сбрасываем состояние
       hideEditForm();
     } catch (error) {
-      // Показываем сообщение об ошибке
+      // Показываем сообщение об ошибке, но НЕ закрываем форму
       showErrorMessage();
       console.error('Ошибка отправки формы:', error);
     } finally {
@@ -251,6 +266,6 @@ const destroyFormValidation = () => {
   hashtagInputElement.removeEventListener('keydown', onHashtagInputKeydown);
   commentInputElement.removeEventListener('keydown', onCommentInputKeydown);
   document.removeEventListener('keydown', onDocumentKeydown);
-};// Обработчик отправки формы
+};
 
 export { initFormValidation, destroyFormValidation };

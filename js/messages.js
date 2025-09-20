@@ -52,12 +52,14 @@ const showErrorMessage = () => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       closeErrorModal();
+      // НЕ закрываем форму редактирования!
     }
   };
 
   const onDocumentClick = (evt) => {
     if (!evt.target.closest('.error__inner')) {
       closeErrorModal();
+      // НЕ закрываем форму редактирования!
     }
   };
 
