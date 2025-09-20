@@ -1,6 +1,8 @@
 import { resetEffects } from './effect-slider.js';
 import { resetScale } from './scale-control.js';
 import { isEscapeKey } from './utils.js';
+import { sendData } from './api.js';
+import { showSuccessMessage, showErrorMessage } from './messages.js';
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = document.querySelector('#upload-file');
@@ -123,6 +125,13 @@ pristine.addValidator(
 // Обработчик клавиши Esc
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
+    // Не закрываем форму, если открыто сообщение об ошибке
+    const errorModal = document.querySelector('.error');
+    if (errorModal) {
+      evt.stopPropagation();
+      return;
+    }
+
     // Не закрываем форму, если фокус в полях ввода
     if (document.activeElement === hashtagInputElement || document.activeElement === commentInputElement) {
       evt.stopPropagation();
@@ -137,13 +146,21 @@ const onDocumentKeydown = (evt) => {
 // Обработчики для отмены propagation при фокусе
 const onHashtagInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
-    evt.stopPropagation();
+    // Не даем Esc закрыть сообщение об ошибке, если оно открыто
+    const errorModal = document.querySelector('.error');
+    if (errorModal) {
+      evt.stopPropagation();
+    }
   }
 };
 
 const onCommentInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
-    evt.stopPropagation();
+    // Не даем Esc закрыть сообщение об ошибке, если оно открыто
+    const errorModal = document.querySelector('.error');
+    if (errorModal) {
+      evt.stopPropagation();
+    }
   }
 };
 
@@ -178,7 +195,7 @@ const onCancelButtonClick = () => {
 };
 
 // Обработчик отправки формы
-const onFormSubmit = (evt) => {
+const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
   const isValid = pristine.validate();
@@ -188,14 +205,27 @@ const onFormSubmit = (evt) => {
     submitButtonElement.disabled = true;
     submitButtonElement.textContent = 'Отправка...';
 
-    // Здесь будет отправка формы на сервер
-    setTimeout(() => {
-      // В реальном коде здесь будет fetch запрос
-      console.log('Форма отправлена');
+    try {
+      // Создаем FormData из формы
+      const formData = new FormData(formElement);
+
+      // Отправляем данные на сервер
+      await sendData(formData);
+
+      // Показываем сообщение об успехе
+      showSuccessMessage();
+
+      // Закрываем форму и сбрасываем состояние
       hideEditForm();
+    } catch (error) {
+      // Показываем сообщение об ошибке, но НЕ закрываем форму
+      showErrorMessage();
+      console.error('Ошибка отправки формы:', error);
+    } finally {
+      // Разблокируем кнопку
       submitButtonElement.disabled = false;
       submitButtonElement.textContent = 'Опубликовать';
-    }, 1000);
+    }
   }
 };
 

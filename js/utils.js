@@ -10,7 +10,30 @@ const generateUniqueIds = (count) => {
   return [...ids];
 };
 
-// Функция проверки нажатия клавиши Escape
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export { getRandomInteger, generateUniqueIds, isEscapeKey };
+// Функция для показа ошибки загрузки данных
+const showDataError = (message) => {
+  const dataErrorTemplate = document.querySelector('#data-error');
+  const dataErrorElement = dataErrorTemplate.content.cloneNode(true);
+  const dataError = dataErrorElement.querySelector('.data-error');
+
+  if (message) {
+    const titleElement = dataError.querySelector('.data-error__title');
+    if (titleElement) {
+      titleElement.textContent = message;
+    }
+  }
+
+  document.body.appendChild(dataErrorElement);
+
+  // Удаляем сообщение через 5 секунд
+  setTimeout(() => {
+    const existingError = document.querySelector('.data-error');
+    if (existingError) {
+      existingError.remove();
+    }
+  }, 5000);
+};
+
+export { getRandomInteger, generateUniqueIds, isEscapeKey, showDataError };
