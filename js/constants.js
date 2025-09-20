@@ -1,16 +1,17 @@
+// Параметры генерации
 const MIN_ID = 1;
- const MAX_ID = 1000;
- const MIN_AVATAR_NUM = 1;
- const MAX_AVATAR_NUM = 6;
- const MIN_LIKES = 15;
- const MAX_LIKES = 200;
- const MIN_COMMENTS = 0;
- const MAX_COMMENTS = 30;
- const PHOTOS_COUNT = 25;
+const MAX_ID = 1000;
+const MIN_AVATAR_NUM = 1;
+const MAX_AVATAR_NUM = 6;
+const MIN_LIKES = 15;
+const MAX_LIKES = 200;
+const MIN_COMMENTS = 0;
+const MAX_COMMENTS = 30;
+const PHOTOS_COUNT = 25;
 
 // Данные для генерации
- const MESSAGES = [
- 'Ваша фотография - это просто шедевр! Машаллах!',
+const MESSAGES = [
+  'Ваша фотография - это просто шедевр! Машаллах!',
   'Красота неописуемая, глаза радуются!',
   'Как горный орел, величественно и смело!',
   'Этот кадр достоин быть на обложке журнала!',
@@ -72,7 +73,7 @@ const MIN_ID = 1;
   'Фотография настолько красивая, что даже персидский ковер позавидовал!'
 ];
 
- const NAMES = ['Магомед', 'Али', 'Хасан', 'Руслан', 'Аслан', 'Ибрагим', 'Мурад', 'Расул',
+const NAMES = ['Магомед', 'Али', 'Хасан', 'Руслан', 'Аслан', 'Ибрагим', 'Мурад', 'Расул',
   'Саид', 'Шамиль', 'Заур', 'Арсен', 'Адам', 'Ахмед', 'Асхаб', 'Батыр',
   'Дауд', 'Ислам', 'Камиль', 'Мансур', 'Омар', 'Тимур', 'Халид', 'Юсуп',
   'Амина', 'Зухра', 'Патимат', 'Малика', 'Аиша', 'Джамиля', 'Лейла', 'Мадина',
@@ -84,7 +85,7 @@ const MIN_ID = 1;
   'Аревик', 'Диана', 'Ирина', 'Кнарик', 'Манушак', 'Нарине', 'Сатен', 'Шоге',
   'Артём', 'Мария', 'Дмитрий', 'Анна', 'Сергей', 'Елена', 'Иван', 'Ольга', 'Алексей', 'Татьяна'];
 
- const DESCRIPTIONS = [
+const DESCRIPTIONS = [
   'Отличный момент!',
   'Закат на море',
   'Мой любимый питомец',
@@ -97,4 +98,18 @@ const MIN_ID = 1;
   'Фото на память'
 ];
 
-export {MIN_ID,MAX_ID,MIN_AVATAR_NUM,MAX_AVATAR_NUM,MIN_LIKES,MAX_LIKES,MIN_COMMENTS,MAX_COMMENTS,PHOTOS_COUNT,MESSAGES,NAMES,DESCRIPTIONS};
+export {
+  MIN_ID,
+  MAX_ID,
+  MIN_AVATAR_NUM,
+  MAX_AVATAR_NUM,
+  MIN_LIKES,
+  MAX_LIKES,
+  MIN_COMMENTS,
+  MAX_COMMENTS,
+  PHOTOS_COUNT,
+  MESSAGES,
+  NAMES,
+  DESCRIPTIONS
+};
+
