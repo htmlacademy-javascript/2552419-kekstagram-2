@@ -12,7 +12,6 @@ const generateUniqueIds = (count) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-// Функция для показа ошибки загрузки данных
 const showDataError = (message) => {
   const dataErrorTemplate = document.querySelector('#data-error');
   const dataErrorElement = dataErrorTemplate.content.cloneNode(true);
@@ -27,7 +26,6 @@ const showDataError = (message) => {
 
   document.body.appendChild(dataErrorElement);
 
-  // Удаляем сообщение через 5 секунд
   setTimeout(() => {
     const existingError = document.querySelector('.data-error');
     if (existingError) {
@@ -36,4 +34,30 @@ const showDataError = (message) => {
   }, 5000);
 };
 
-export { getRandomInteger, generateUniqueIds, isEscapeKey, showDataError };
+function debounce(callback, timeoutDelay = 500) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+function throttle(callback, delayBetweenFrames) {
+  let lastTime = 0;
+  return (...rest) => {
+    const now = new Date();
+    if (now - lastTime >= delayBetweenFrames) {
+      callback.apply(this, rest);
+      lastTime = now;
+    }
+  };
+}
+
+export {
+  getRandomInteger,
+  generateUniqueIds,
+  isEscapeKey,
+  showDataError,
+  debounce,
+  throttle
+};

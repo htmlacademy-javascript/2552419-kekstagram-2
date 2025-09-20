@@ -1,6 +1,6 @@
 import { resetEffects } from './effect-slider.js';
 import { resetScale } from './scale-control.js';
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey, debounce } from './utils.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
 
@@ -12,7 +12,6 @@ const hashtagInputElement = document.querySelector('.text__hashtags');
 const commentInputElement = document.querySelector('.text__description');
 const submitButtonElement = document.querySelector('#upload-submit');
 
-// Инициализация Pristine
 const pristine = new Pristine(formElement, {
   classTo: 'img-upload__field-wrapper',
   errorClass: 'img-upload__field-wrapper--error',
@@ -22,7 +21,6 @@ const pristine = new Pristine(formElement, {
   errorTextClass: 'img-upload__error'
 });
 
-// Функции для получения хэштегов из значения
 const getHashtagsArray = (value) => {
   return value.trim().split(/\s+/).filter((tag) => tag !== '');
 };
@@ -122,17 +120,14 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
-// Обработчик клавиши Esc
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
-    // Не закрываем форму, если открыто сообщение об ошибке
     const errorModal = document.querySelector('.error');
     if (errorModal) {
       evt.stopPropagation();
       return;
     }
 
-    // Не закрываем форму, если фокус в полях ввода
     if (document.activeElement === hashtagInputElement || document.activeElement === commentInputElement) {
       evt.stopPropagation();
       return;
@@ -143,10 +138,8 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-// Обработчики для отмены propagation при фокусе
 const onHashtagInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
-    // Не даем Esc закрыть сообщение об ошибке, если оно открыто
     const errorModal = document.querySelector('.error');
     if (errorModal) {
       evt.stopPropagation();
@@ -156,7 +149,6 @@ const onHashtagInputKeydown = (evt) => {
 
 const onCommentInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
-    // Не даем Esc закрыть сообщение об ошибке, если оно открыто
     const errorModal = document.querySelector('.error');
     if (errorModal) {
       evt.stopPropagation();
@@ -164,87 +156,74 @@ const onCommentInputKeydown = (evt) => {
   }
 };
 
-// Функция для показа формы редактирования
 const showEditForm = () => {
   uploadOverlayElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-// Функция для скрытия формы редактирования
 const hideEditForm = () => {
   uploadOverlayElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
   formElement.reset();
   pristine.reset();
-
-  // Сброс эффектов и масштаба
   resetEffects();
   resetScale();
 };
 
-// Обработчик изменения файла
 const onFileInputChange = () => {
   showEditForm();
 };
 
-// Обработчик закрытия формы
 const onCancelButtonClick = () => {
   hideEditForm();
 };
 
-// Обработчик отправки формы
 const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
   const isValid = pristine.validate();
 
   if (isValid) {
-    // Блокируем кнопку отправки
     submitButtonElement.disabled = true;
     submitButtonElement.textContent = 'Отправка...';
 
     try {
-      // Создаем FormData из формы
       const formData = new FormData(formElement);
-
-      // Отправляем данные на сервер
       await sendData(formData);
-
-      // Показываем сообщение об успехе
       showSuccessMessage();
-
-      // Закрываем форму и сбрасываем состояние
       hideEditForm();
     } catch (error) {
-      // Показываем сообщение об ошибке, но НЕ закрываем форму
       showErrorMessage();
       console.error('Ошибка отправки формы:', error);
     } finally {
-      // Разблокируем кнопку
       submitButtonElement.disabled = false;
       submitButtonElement.textContent = 'Опубликовать';
     }
   }
 };
 
-// Инициализация обработчиков событий
+const validateHashtagsDebounced = debounce(() => {
+  pristine.validate(hashtagInputElement);
+}, 300);
+
 const initFormValidation = () => {
   uploadInputElement.addEventListener('change', onFileInputChange);
   cancelButtonElement.addEventListener('click', onCancelButtonClick);
   formElement.addEventListener('submit', onFormSubmit);
   hashtagInputElement.addEventListener('keydown', onHashtagInputKeydown);
   commentInputElement.addEventListener('keydown', onCommentInputKeydown);
+  hashtagInputElement.addEventListener('input', validateHashtagsDebounced);
 };
 
-// Функция для удаления обработчиков (на случай уничтожения)
 const destroyFormValidation = () => {
   uploadInputElement.removeEventListener('change', onFileInputChange);
   cancelButtonElement.removeEventListener('click', onCancelButtonClick);
   formElement.removeEventListener('submit', onFormSubmit);
   hashtagInputElement.removeEventListener('keydown', onHashtagInputKeydown);
   commentInputElement.removeEventListener('keydown', onCommentInputKeydown);
+  hashtagInputElement.removeEventListener('input', validateHashtagsDebounced);
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 

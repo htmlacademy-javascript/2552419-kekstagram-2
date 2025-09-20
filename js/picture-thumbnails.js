@@ -1,12 +1,15 @@
 import { openBigPicture } from './big-picture.js';
 
-const renderThumbnails = (photosData) => {
-  const picturesContainerElement = document.querySelector('.pictures');
-  const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
+const picturesContainerElement = document.querySelector('.pictures');
+const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
 
-  // Очищаем контейнер перед добавлением новых миниатюр
+const clearThumbnails = () => {
   const existingPictures = picturesContainerElement.querySelectorAll('.picture');
   existingPictures.forEach(picture => picture.remove());
+};
+
+const renderThumbnails = (photosData) => {
+  clearThumbnails();
 
   const fragment = document.createDocumentFragment();
 
@@ -18,14 +21,12 @@ const renderThumbnails = (photosData) => {
     thumbnail.querySelector('.picture__likes').textContent = photo.likes;
     thumbnail.querySelector('.picture__comments').textContent = photo.comments.length;
 
-    // Добавляем обработчик клика для открытия полноразмерного изображения
     const onThumbnailClick = (evt) => {
       evt.preventDefault();
       openBigPicture(photo);
     };
 
     thumbnail.addEventListener('click', onThumbnailClick);
-
     fragment.appendChild(thumbnail);
   });
 
@@ -33,4 +34,5 @@ const renderThumbnails = (photosData) => {
 };
 
 export { renderThumbnails };
+
 
