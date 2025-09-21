@@ -8,24 +8,24 @@ const showSuccessMessage = () => {
 
   document.body.append(successElement);
 
-  const closeSuccessModal = () => {
-    successModal.remove();
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.removeEventListener('click', onDocumentClick);
-  };
-
-  const onDocumentKeydown = (evt) => {
+  function onDocumentKeydown(evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       closeSuccessModal();
     }
-  };
+  }
 
-  const onDocumentClick = (evt) => {
+  function onDocumentClick(evt) {
     if (!evt.target.closest('.success__inner')) {
       closeSuccessModal();
     }
-  };
+  }
+
+  function closeSuccessModal() {
+    successModal.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
+    document.removeEventListener('click', onDocumentClick);
+  }
 
   successButton.addEventListener('click', closeSuccessModal);
   document.addEventListener('keydown', onDocumentKeydown);
@@ -45,24 +45,24 @@ const showErrorMessage = (customMessage = null) => {
 
   document.body.append(errorElement);
 
-  const closeErrorModal = () => {
-    errorModal.remove();
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.removeEventListener('click', onDocumentClick);
-  };
-
-  const onDocumentKeydown = (evt) => {
+  function onDocumentKeydown(evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       closeErrorModal();
     }
-  };
+  }
 
-  const onDocumentClick = (evt) => {
+  function onDocumentClick(evt) {
     if (!evt.target.closest('.error__inner')) {
       closeErrorModal();
     }
-  };
+  }
+
+  function closeErrorModal() {
+    errorModal.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
+    document.removeEventListener('click', onDocumentClick);
+  }
 
   errorButton.addEventListener('click', closeErrorModal);
   document.addEventListener('keydown', onDocumentKeydown);
@@ -70,4 +70,5 @@ const showErrorMessage = (customMessage = null) => {
 };
 
 export { showSuccessMessage, showErrorMessage };
+
 
