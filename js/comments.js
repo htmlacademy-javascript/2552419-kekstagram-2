@@ -11,6 +11,6 @@ const generateComments = (count) => {
     name: NAMES[getRandomInteger(0, NAMES.length - 1)]
   }));
 };
+export { generateComments };
 
-export {generateComments};
 
