@@ -5,7 +5,6 @@ import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
 
 const MAX_HASHTAG_COUNT = 5;
-const MAX_HASHTAG_LENGTH = 20;
 const MAX_COMMENT_LENGTH = 140;
 const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
@@ -28,18 +27,14 @@ const pristine = new Pristine(formElement, {
   errorTextClass: 'img-upload__error'
 });
 
-const getHashtagsArray = (value) => {
-  return value.trim().split(/\s+/).filter((tag) => tag !== '');
-};
+const getHashtagsArray = (value) => value.trim().split(/\s+/).filter((tag) => tag !== '');
 
 const validateHashtagFormat = (hashtag) => {
   const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
   return hashtagRegex.test(hashtag);
 };
 
-const validateHashtagCount = (hashtags) => {
-  return hashtags.length <= MAX_HASHTAG_COUNT;
-};
+const validateHashtagCount = (hashtags) => hashtags.length <= MAX_HASHTAG_COUNT;
 
 const validateHashtagUniqueness = (hashtags) => {
   const uniqueHashtags = new Set(hashtags.map((tag) => tag.toLowerCase()));
@@ -97,9 +92,7 @@ const getHashtagErrorMessage = (value) => {
   return '';
 };
 
-const validateComment = (value) => {
-  return value.length <= MAX_COMMENT_LENGTH;
-};
+const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
 
 pristine.addValidator(
   hashtagInputElement,
@@ -128,9 +121,8 @@ const loadUserImage = (file) => {
   reader.readAsDataURL(file);
 };
 
-const isValidFileType = (file) => {
-  return VALID_FILE_TYPES.includes(file.type);
-};
+const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
+
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -148,6 +140,22 @@ const onDocumentKeydown = (evt) => {
     evt.preventDefault();
     hideEditForm();
   }
+};
+
+// Затем объявляем hideEditForm
+const hideEditForm = () => {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
 };
 
 const onHashtagInputKeydown = (evt) => {
@@ -172,21 +180,6 @@ const showEditForm = () => {
   uploadOverlayElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
-};
-
-const hideEditForm = () => {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
 };
 
 const onFileInputChange = (evt) => {
