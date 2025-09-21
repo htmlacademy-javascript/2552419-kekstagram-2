@@ -123,22 +123,7 @@ const loadUserImage = (file) => {
 
 const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
-// Объявляем функции в правильном порядке, чтобы избежать циклических зависимостей
-const hideEditForm = () => {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
-};
-
+// Сначала объявляем onDocumentKeydown
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     const errorModal = document.querySelector('.error');
@@ -155,6 +140,22 @@ const onDocumentKeydown = (evt) => {
     evt.preventDefault();
     hideEditForm();
   }
+};
+
+// Затем объявляем hideEditForm
+const hideEditForm = () => {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
 };
 
 const onHashtagInputKeydown = (evt) => {
@@ -249,3 +250,4 @@ const destroyFormValidation = () => {
 };
 
 export { initFormValidation, destroyFormValidation };
+
