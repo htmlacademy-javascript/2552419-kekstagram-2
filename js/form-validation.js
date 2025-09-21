@@ -4,6 +4,11 @@ import { isEscapeKey, debounce } from './utils.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
 
+const MAX_HASHTAG_COUNT = 5;
+const MAX_HASHTAG_LENGTH = 20;
+const MAX_COMMENT_LENGTH = 140;
+const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = document.querySelector('#upload-file');
 const uploadOverlayElement = document.querySelector('.img-upload__overlay');
@@ -13,11 +18,6 @@ const commentInputElement = document.querySelector('.text__description');
 const submitButtonElement = document.querySelector('#upload-submit');
 const imagePreviewElement = document.querySelector('.img-upload__preview img');
 const effectsPreviews = document.querySelectorAll('.effects__preview');
-
-const MAX_HASHTAG_COUNT = 5;
-const MAX_HASHTAG_LENGTH = 20;
-const MAX_COMMENT_LENGTH = 140;
-const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 const pristine = new Pristine(formElement, {
   classTo: 'img-upload__field-wrapper',
@@ -257,4 +257,3 @@ const destroyFormValidation = () => {
 };
 
 export { initFormValidation, destroyFormValidation };
-
