@@ -7,14 +7,6 @@ const MAX_LIKES = 200;
 const MIN_COMMENTS = 0;
 const MAX_COMMENTS = 30;
 const PHOTOS_COUNT = 25;
-const MAX_ID = 1000;
-const MIN_AVATAR_NUM = 1;
-const MAX_AVATAR_NUM = 6;
-const MIN_LIKES = 15;
-const MAX_LIKES = 200;
-const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 30;
-const PHOTOS_COUNT = 25;
 
 export {
   MIN_ID,
