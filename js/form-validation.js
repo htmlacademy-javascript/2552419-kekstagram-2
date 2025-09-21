@@ -4,6 +4,10 @@ import { isEscapeKey, debounce } from './utils.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
 
+const MAX_HASHTAG_COUNT = 5;
+const MAX_COMMENT_LENGTH = 140;
+const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = document.querySelector('#upload-file');
 const uploadOverlayElement = document.querySelector('.img-upload__overlay');
@@ -13,10 +17,6 @@ const commentInputElement = document.querySelector('.text__description');
 const submitButtonElement = document.querySelector('#upload-submit');
 const imagePreviewElement = document.querySelector('.img-upload__preview img');
 const effectsPreviews = document.querySelectorAll('.effects__preview');
-
-const MAX_HASHTAG_COUNT = 5;
-const MAX_COMMENT_LENGTH = 140;
-const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 const pristine = new Pristine(formElement, {
   classTo: 'img-upload__field-wrapper',
@@ -123,6 +123,7 @@ const loadUserImage = (file) => {
 
 const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     const errorModal = document.querySelector('.error');
@@ -139,6 +140,22 @@ const onDocumentKeydown = (evt) => {
     evt.preventDefault();
     hideEditForm();
   }
+};
+
+// Затем объявляем hideEditForm
+const hideEditForm = () => {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
 };
 
 const onHashtagInputKeydown = (evt) => {
@@ -165,21 +182,6 @@ const showEditForm = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-function hideEditForm() {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
-}
-
 const onFileInputChange = (evt) => {
   const file = evt.target.files[0];
 
@@ -204,37 +206,23 @@ const onCancelButtonClick = () => {
 const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
-  // Принудительно проверяем все поля перед отправкой
-  const isHashtagsValid = pristine.validate(hashtagInputElement);
-  const isCommentValid = pristine.validate(commentInputElement);
+  const isValid = pristine.validate();
 
-  // Проверяем, что файл загружен
-  const isFileUploaded = uploadInputElement.files.length > 0;
+  if (isValid) {
+    submitButtonElement.disabled = true;
+    submitButtonElement.textContent = 'Отправка...';
 
-  if (!isFileUploaded) {
-    showErrorMessage('Пожалуйста, выберите файл для загрузки');
-    return;
-  }
-
-  if (!isHashtagsValid || !isCommentValid) {
-    // Показываем ошибки для всех невалидных полей
-    pristine.validate();
-    return;
-  }
-
-  submitButtonElement.disabled = true;
-  submitButtonElement.textContent = 'Отправка...';
-
-  try {
-    const formData = new FormData(formElement);
-    await sendData(formData);
-    showSuccessMessage();
-    hideEditForm();
-  } catch (error) {
-    showErrorMessage();
-  } finally {
-    submitButtonElement.disabled = false;
-    submitButtonElement.textContent = 'Опубликовать';
+    try {
+      const formData = new FormData(formElement);
+      await sendData(formData);
+      showSuccessMessage();
+      hideEditForm();
+    } catch (error) {
+      showErrorMessage();
+    } finally {
+      submitButtonElement.disabled = false;
+      submitButtonElement.textContent = 'Опубликовать';
+    }
   }
 };
 
@@ -262,5 +250,3 @@ const destroyFormValidation = () => {
 };
 
 export { initFormValidation, destroyFormValidation };
-
-
