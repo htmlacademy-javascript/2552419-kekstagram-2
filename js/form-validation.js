@@ -7,6 +7,7 @@ import { showSuccessMessage, showErrorMessage } from './messages.js';
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
 const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = document.querySelector('#upload-file');
@@ -29,10 +30,7 @@ const pristine = new Pristine(formElement, {
 
 const getHashtagsArray = (value) => value.trim().split(/\s+/).filter((tag) => tag !== '');
 
-const validateHashtagFormat = (hashtag) => {
-  const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
-  return hashtagRegex.test(hashtag);
-};
+const validateHashtagFormat = (hashtag) => HASHTAG_REGEX.test(hashtag);
 
 const validateHashtagCount = (hashtags) => hashtags.length <= MAX_HASHTAG_COUNT;
 
@@ -106,24 +104,21 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
-const loadUserImage = (file) => {
-  const reader = new FileReader();
-
-  const onLoad = () => {
-    const result = reader.result;
-    imagePreviewElement.src = result;
-    effectsPreviews.forEach((preview) => {
-      preview.style.backgroundImage = `url(${result})`;
-    });
-  };
-
-  reader.addEventListener('load', onLoad);
-  reader.readAsDataURL(file);
+const hideEditForm = () => {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
 };
 
-const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
-
-// Сначала объявляем onDocumentKeydown
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     const errorModal = document.querySelector('.error');
@@ -142,21 +137,22 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-// Затем объявляем hideEditForm
-const hideEditForm = () => {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
+const loadUserImage = (file) => {
+  const reader = new FileReader();
+
+  const onLoad = () => {
+    const result = reader.result;
+    imagePreviewElement.src = result;
+    effectsPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url(${result})`;
+    });
+  };
+
+  reader.addEventListener('load', onLoad);
+  reader.readAsDataURL(file);
 };
+
+const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
 const onHashtagInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -250,4 +246,6 @@ const destroyFormValidation = () => {
 };
 
 export { initFormValidation, destroyFormValidation };
+
+
 

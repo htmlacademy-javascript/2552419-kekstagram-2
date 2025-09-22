@@ -11,6 +11,13 @@ const generateComments = (count) => {
     name: NAMES[getRandomInteger(0, NAMES.length - 1)]
   }));
 };
+
+const generateUniqueIds = (count) => {
+  const ids = new Set();
+  while (ids.size < count) {
+    ids.add(Math.floor(Math.random() * 1000) + 1);
+  }
+  return Array.from(ids);
+};
+
 export { generateComments };
-
-
