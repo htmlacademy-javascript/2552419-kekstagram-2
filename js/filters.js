@@ -1,4 +1,3 @@
-
 import { debounce } from './utils.js';
 import { renderThumbnails } from './picture-thumbnails.js';
 

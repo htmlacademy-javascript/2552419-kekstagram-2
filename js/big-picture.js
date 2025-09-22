@@ -65,7 +65,7 @@ const onCloseButtonClick = () => {
   closeBigPicture();
 };
 
-function closeBigPicture() {
+const closeBigPicture = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
@@ -75,9 +75,9 @@ function closeBigPicture() {
 
   currentComments = [];
   commentsShown = 0;
-}
+};
 
-function openBigPicture(photo) {
+const openBigPicture = (photo) => {
   const imageElement = bigPictureElement.querySelector('.big-picture__img img');
   const likesCountElement = bigPictureElement.querySelector('.likes-count');
   const captionElement = bigPictureElement.querySelector('.social__caption');
@@ -102,7 +102,6 @@ function openBigPicture(photo) {
   document.addEventListener('keydown', onDocumentKeydown);
   closeButtonElement.addEventListener('click', onCloseButtonClick);
   commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
-}
+};
 
 export { openBigPicture };
-

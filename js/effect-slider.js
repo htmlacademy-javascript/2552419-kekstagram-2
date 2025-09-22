@@ -1,8 +1,8 @@
-const effectLevelContainerElement = document.querySelector('.img-upload__effect-level');
-const effectLevelSliderElement = document.querySelector('.effect-level__slider');
-const effectLevelValueElement = document.querySelector('.effect-level__value');
-const effectRadiosElements = document.querySelectorAll('.effects__radio');
-const imagePreviewElement = document.querySelector('.img-upload__preview img');
+const EFFECT_LEVEL_CONTAINER_ELEMENT = document.querySelector('.img-upload__effect-level');
+const EFFECT_LEVEL_SLIDER_ELEMENT = document.querySelector('.effect-level__slider');
+const EFFECT_LEVEL_VALUE_ELEMENT = document.querySelector('.effect-level__value');
+const EFFECT_RADIOS_ELEMENTS = document.querySelectorAll('.effects__radio');
+const IMAGE_PREVIEW_ELEMENT = document.querySelector('.img-upload__preview img');
 
 const Effect = {
   NONE: 'none',
@@ -69,15 +69,15 @@ let slider = null;
 
 const updateEffect = (value) => {
   if (currentEffect === Effect.NONE) {
-    imagePreviewElement.style.filter = 'none';
-    effectLevelContainerElement.classList.add('hidden');
-    effectLevelValueElement.value = '';
+    IMAGE_PREVIEW_ELEMENT.style.filter = 'none';
+    EFFECT_LEVEL_CONTAINER_ELEMENT.classList.add('hidden');
+    EFFECT_LEVEL_VALUE_ELEMENT.value = '';
   } else {
     const effect = EffectConfig[currentEffect];
     const filterValue = effect.unit ? `${value}${effect.unit}` : value;
-    imagePreviewElement.style.filter = `${effect.filter}(${filterValue})`;
-    effectLevelContainerElement.classList.remove('hidden');
-    effectLevelValueElement.value = value;
+    IMAGE_PREVIEW_ELEMENT.style.filter = `${effect.filter}(${filterValue})`;
+    EFFECT_LEVEL_CONTAINER_ELEMENT.classList.remove('hidden');
+    EFFECT_LEVEL_VALUE_ELEMENT.value = value;
   }
 };
 
@@ -88,7 +88,7 @@ const createSlider = () => {
 
   const effect = EffectConfig[currentEffect];
 
-  slider = noUiSlider.create(effectLevelSliderElement, {
+  slider = noUiSlider.create(EFFECT_LEVEL_SLIDER_ELEMENT, {
     range: {
       min: effect.min,
       max: effect.max
@@ -104,33 +104,35 @@ const createSlider = () => {
   });
 };
 
-const initEffectHandlers = () => {
-  effectRadiosElements.forEach((radio) => {
-    radio.addEventListener('change', (evt) => {
-      currentEffect = evt.target.value;
+const onEffectRadioChange = (evt) => {
+  currentEffect = evt.target.value;
 
-      if (currentEffect === Effect.NONE) {
-        effectLevelContainerElement.classList.add('hidden');
-        imagePreviewElement.style.filter = 'none';
-        effectLevelValueElement.value = '';
-        if (slider) {
-          slider.destroy();
-          slider = null;
-        }
-      } else {
-        createSlider();
-        effectLevelContainerElement.classList.remove('hidden');
-        updateEffect(EffectConfig[currentEffect].start);
-      }
-    });
+  if (currentEffect === Effect.NONE) {
+    EFFECT_LEVEL_CONTAINER_ELEMENT.classList.add('hidden');
+    IMAGE_PREVIEW_ELEMENT.style.filter = 'none';
+    EFFECT_LEVEL_VALUE_ELEMENT.value = '';
+    if (slider) {
+      slider.destroy();
+      slider = null;
+    }
+  } else {
+    createSlider();
+    EFFECT_LEVEL_CONTAINER_ELEMENT.classList.remove('hidden');
+    updateEffect(EffectConfig[currentEffect].start);
+  }
+};
+
+const initEffectHandlers = () => {
+  EFFECT_RADIOS_ELEMENTS.forEach((radio) => {
+    radio.addEventListener('change', onEffectRadioChange);
   });
 };
 
 const resetEffects = () => {
   currentEffect = Effect.NONE;
-  imagePreviewElement.style.filter = 'none';
-  effectLevelContainerElement.classList.add('hidden');
-  effectLevelValueElement.value = '';
+  IMAGE_PREVIEW_ELEMENT.style.filter = 'none';
+  EFFECT_LEVEL_CONTAINER_ELEMENT.classList.add('hidden');
+  EFFECT_LEVEL_VALUE_ELEMENT.value = '';
 
   const noneRadioElement = document.querySelector('#effect-none');
   noneRadioElement.checked = true;
@@ -142,9 +144,10 @@ const resetEffects = () => {
 };
 
 const initEffects = () => {
-  effectLevelContainerElement.classList.add('hidden');
+  EFFECT_LEVEL_CONTAINER_ELEMENT.classList.add('hidden');
   resetEffects();
   initEffectHandlers();
 };
 
 export { initEffects, resetEffects };
+

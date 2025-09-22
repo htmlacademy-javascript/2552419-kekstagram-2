@@ -11,27 +11,23 @@ const showSuccessMessage = () => {
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      onCloseSuccessModal();
+      closeSuccessModal();
     }
   };
 
   const onDocumentClick = (evt) => {
     if (!evt.target.closest('.success__inner')) {
-      onCloseSuccessModal();
+      closeSuccessModal();
     }
   };
 
-  const onCloseSuccessModal = () => {
+  const closeSuccessModal = () => {
     successModal.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onDocumentClick);
   };
 
-  const onSuccessButtonClick = () => {
-    onCloseSuccessModal();
-  };
-
-  successButton.addEventListener('click', onSuccessButtonClick);
+  successButton.addEventListener('click', closeSuccessModal);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
 };
@@ -52,27 +48,23 @@ const showErrorMessage = (customMessage = null) => {
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      onCloseErrorModal();
+      closeErrorModal();
     }
   };
 
   const onDocumentClick = (evt) => {
     if (!evt.target.closest('.error__inner')) {
-      onCloseErrorModal();
+      closeErrorModal();
     }
   };
 
-  const onCloseErrorModal = () => {
+  const closeErrorModal = () => {
     errorModal.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onDocumentClick);
   };
 
-  const onErrorButtonClick = () => {
-    onCloseErrorModal();
-  };
-
-  errorButton.addEventListener('click', onErrorButtonClick);
+  errorButton.addEventListener('click', closeErrorModal);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
 };
