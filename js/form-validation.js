@@ -104,7 +104,23 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
-// Объявляем функции ДО их использования
+const loadUserImage = (file) => {
+  const reader = new FileReader();
+
+  const onLoad = () => {
+    const result = reader.result;
+    imagePreviewElement.src = result;
+    effectsPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url(${result})`;
+    });
+  };
+
+  reader.addEventListener('load', onLoad);
+  reader.readAsDataURL(file);
+};
+
+const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
+
 const hideEditForm = () => {
   uploadOverlayElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -137,23 +153,6 @@ const onDocumentKeydown = (evt) => {
     hideEditForm();
   }
 };
-
-const loadUserImage = (file) => {
-  const reader = new FileReader();
-
-  const onLoad = () => {
-    const result = reader.result;
-    imagePreviewElement.src = result;
-    effectsPreviews.forEach((preview) => {
-      preview.style.backgroundImage = `url(${result})`;
-    });
-  };
-
-  reader.addEventListener('load', onLoad);
-  reader.readAsDataURL(file);
-};
-
-const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
 const onHashtagInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
