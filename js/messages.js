@@ -8,6 +8,7 @@ const showSuccessMessage = () => {
 
   document.body.append(successElement);
 
+  // Сначала объявляем ВСЕ функции
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
@@ -27,6 +28,7 @@ const showSuccessMessage = () => {
     document.removeEventListener('click', onDocumentClick);
   };
 
+  // Потом используем их
   successButton.addEventListener('click', closeSuccessModal);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
@@ -45,6 +47,7 @@ const showErrorMessage = (customMessage = null) => {
 
   document.body.append(errorElement);
 
+  // Сначала объявляем ВСЕ функции
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
@@ -64,6 +67,7 @@ const showErrorMessage = (customMessage = null) => {
     document.removeEventListener('click', onDocumentClick);
   };
 
+  // Потом используем их
   errorButton.addEventListener('click', closeErrorModal);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);

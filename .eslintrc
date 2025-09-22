@@ -14,3 +14,15 @@ globals:
 
 extends:
   "htmlacademy/vanilla"
+
+  {
+    "extends": "htmlacademy/es6",
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "rules": {
+      "no-use-before-define": ["error", { "functions": false, "classes": true }]
+    }
+  }
+  

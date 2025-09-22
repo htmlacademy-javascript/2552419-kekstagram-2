@@ -121,21 +121,7 @@ const loadUserImage = (file) => {
 
 const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
-const hideEditForm = () => {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
-};
-
+// Сначала объявляем ВСЕ вспомогательные функции
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     const errorModal = document.querySelector('.error');
@@ -170,6 +156,22 @@ const onCommentInputKeydown = (evt) => {
       evt.stopPropagation();
     }
   }
+};
+
+// Потом основную функцию, которая их использует
+const hideEditForm = () => {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
 };
 
 const showEditForm = () => {

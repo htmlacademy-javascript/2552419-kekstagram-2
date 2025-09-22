@@ -50,10 +50,7 @@ const renderCommentsPortion = () => {
   commentsLoaderElement.classList.toggle('hidden', commentsShown >= currentComments.length);
 };
 
-const onCommentsLoaderClick = () => {
-  renderCommentsPortion();
-};
-
+// Сначала объявляем ВСЕ вспомогательные функции
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -65,6 +62,11 @@ const onCloseButtonClick = () => {
   closeBigPicture();
 };
 
+const onCommentsLoaderClick = () => {
+  renderCommentsPortion();
+};
+
+// Потом основную функцию, которая их использует
 const closeBigPicture = () => {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
