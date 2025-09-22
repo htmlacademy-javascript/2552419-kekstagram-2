@@ -8,7 +8,7 @@ const MIN_COMMENTS = 0;
 const MAX_COMMENTS = 30;
 const PHOTOS_COUNT = 25;
 
-// Добавлены недостающие константы
+
 const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -47,8 +47,5 @@ export {
   MAX_LIKES,
   MIN_COMMENTS,
   MAX_COMMENTS,
-  PHOTOS_COUNT,
-  MESSAGES,
-  NAMES,
-  DESCRIPTIONS
+  PHOTOS_COUNT
 };
