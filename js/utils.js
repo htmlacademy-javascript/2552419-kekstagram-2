@@ -1,14 +1,7 @@
-import { MIN_ID, MAX_ID } from './constants.js';
+const DATA_ERROR_DELAY = 5000;
+const DEBOUNCE_DELAY = 500;
 
 const getRandomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-const generateUniqueIds = (count) => {
-  const ids = new Set();
-  while (ids.size < count) {
-    ids.add(getRandomInteger(MIN_ID, MAX_ID));
-  }
-  return [...ids];
-};
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
@@ -31,10 +24,10 @@ const showDataError = (message) => {
     if (existingError) {
       existingError.remove();
     }
-  }, 5000);
+  }, DATA_ERROR_DELAY);
 };
 
-const debounce = (callback, timeoutDelay = 500) => {
+const debounce = (callback, timeoutDelay = DEBOUNCE_DELAY) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
@@ -53,11 +46,19 @@ const throttle = (callback, delayBetweenFrames) => {
   };
 };
 
+const generateUniqueIds = (count) => {
+  const ids = new Set();
+  while (ids.size < count) {
+    ids.add(Math.floor(Math.random() * 1000) + 1);
+  }
+  return Array.from(ids);
+};
+
 export {
   getRandomInteger,
-  generateUniqueIds,
   isEscapeKey,
   showDataError,
   debounce,
-  throttle
+  throttle,
+  generateUniqueIds
 };

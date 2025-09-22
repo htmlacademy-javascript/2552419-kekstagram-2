@@ -8,26 +8,30 @@ const showSuccessMessage = () => {
 
   document.body.append(successElement);
 
-  function onDocumentKeydown(evt) {
+  const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      closeSuccessModal();
+      onCloseSuccessModal();
     }
-  }
+  };
 
-  function onDocumentClick(evt) {
+  const onDocumentClick = (evt) => {
     if (!evt.target.closest('.success__inner')) {
-      closeSuccessModal();
+      onCloseSuccessModal();
     }
-  }
+  };
 
-  function closeSuccessModal() {
+  const onCloseSuccessModal = () => {
     successModal.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onDocumentClick);
-  }
+  };
 
-  successButton.addEventListener('click', closeSuccessModal);
+  const onSuccessButtonClick = () => {
+    onCloseSuccessModal();
+  };
+
+  successButton.addEventListener('click', onSuccessButtonClick);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
 };
@@ -45,30 +49,32 @@ const showErrorMessage = (customMessage = null) => {
 
   document.body.append(errorElement);
 
-  function onDocumentKeydown(evt) {
+  const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      closeErrorModal();
+      onCloseErrorModal();
     }
-  }
+  };
 
-  function onDocumentClick(evt) {
+  const onDocumentClick = (evt) => {
     if (!evt.target.closest('.error__inner')) {
-      closeErrorModal();
+      onCloseErrorModal();
     }
-  }
+  };
 
-  function closeErrorModal() {
+  const onCloseErrorModal = () => {
     errorModal.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onDocumentClick);
-  }
+  };
 
-  errorButton.addEventListener('click', closeErrorModal);
+  const onErrorButtonClick = () => {
+    onCloseErrorModal();
+  };
+
+  errorButton.addEventListener('click', onErrorButtonClick);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
 };
 
 export { showSuccessMessage, showErrorMessage };
-
-

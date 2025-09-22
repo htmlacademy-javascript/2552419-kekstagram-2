@@ -1,5 +1,7 @@
 import { isEscapeKey } from './utils.js';
 
+const COMMENTS_PER_PORTION = 5;
+
 const bigPictureElement = document.querySelector('.big-picture');
 const closeButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
 const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
@@ -7,8 +9,6 @@ const socialCommentCountElement = bigPictureElement.querySelector('.social__comm
 const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
 const socialCommentShownCountElement = socialCommentCountElement.querySelector('.social__comment-shown-count');
 const socialCommentTotalCountElement = socialCommentCountElement.querySelector('.social__comment-total-count');
-
-const COMMENTS_PER_PORTION = 5;
 
 let currentComments = [];
 let commentsShown = 0;
@@ -47,11 +47,7 @@ const renderCommentsPortion = () => {
   socialCommentShownCountElement.textContent = commentsShown;
   socialCommentTotalCountElement.textContent = currentComments.length;
 
-  if (commentsShown >= currentComments.length) {
-    commentsLoaderElement.classList.add('hidden');
-  } else {
-    commentsLoaderElement.classList.remove('hidden');
-  }
+  commentsLoaderElement.classList.toggle('hidden', commentsShown >= currentComments.length);
 };
 
 const onCommentsLoaderClick = () => {
@@ -109,5 +105,4 @@ function openBigPicture(photo) {
 }
 
 export { openBigPicture };
-
 

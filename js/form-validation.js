@@ -4,6 +4,11 @@ import { isEscapeKey, debounce } from './utils.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
 
+const MAX_HASHTAG_COUNT = 5;
+const MAX_COMMENT_LENGTH = 140;
+const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
+
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = document.querySelector('#upload-file');
 const uploadOverlayElement = document.querySelector('.img-upload__overlay');
@@ -13,10 +18,6 @@ const commentInputElement = document.querySelector('.text__description');
 const submitButtonElement = document.querySelector('#upload-submit');
 const imagePreviewElement = document.querySelector('.img-upload__preview img');
 const effectsPreviews = document.querySelectorAll('.effects__preview');
-
-const MAX_HASHTAG_COUNT = 5;
-const MAX_COMMENT_LENGTH = 140;
-const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 const pristine = new Pristine(formElement, {
   classTo: 'img-upload__field-wrapper',
@@ -29,10 +30,7 @@ const pristine = new Pristine(formElement, {
 
 const getHashtagsArray = (value) => value.trim().split(/\s+/).filter((tag) => tag !== '');
 
-const validateHashtagFormat = (hashtag) => {
-  const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
-  return hashtagRegex.test(hashtag);
-};
+const validateHashtagFormat = (hashtag) => HASHTAG_REGEX.test(hashtag);
 
 const validateHashtagCount = (hashtags) => hashtags.length <= MAX_HASHTAG_COUNT;
 
@@ -106,22 +104,20 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
-const loadUserImage = (file) => {
-  const reader = new FileReader();
-
-  const onLoad = () => {
-    const result = reader.result;
-    imagePreviewElement.src = result;
-    effectsPreviews.forEach((preview) => {
-      preview.style.backgroundImage = `url(${result})`;
-    });
-  };
-
-  reader.addEventListener('load', onLoad);
-  reader.readAsDataURL(file);
+const hideEditForm = () => {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
 };
-
-const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -140,6 +136,23 @@ const onDocumentKeydown = (evt) => {
     hideEditForm();
   }
 };
+
+const loadUserImage = (file) => {
+  const reader = new FileReader();
+
+  const onLoad = () => {
+    const result = reader.result;
+    imagePreviewElement.src = result;
+    effectsPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url(${result})`;
+    });
+  };
+
+  reader.addEventListener('load', onLoad);
+  reader.readAsDataURL(file);
+};
+
+const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
 const onHashtagInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -165,21 +178,6 @@ const showEditForm = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-function hideEditForm() {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
-}
-
 const onFileInputChange = (evt) => {
   const file = evt.target.files[0];
 
@@ -204,37 +202,23 @@ const onCancelButtonClick = () => {
 const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
-  // Принудительно проверяем все поля перед отправкой
-  const isHashtagsValid = pristine.validate(hashtagInputElement);
-  const isCommentValid = pristine.validate(commentInputElement);
+  const isValid = pristine.validate();
 
-  // Проверяем, что файл загружен
-  const isFileUploaded = uploadInputElement.files.length > 0;
+  if (isValid) {
+    submitButtonElement.disabled = true;
+    submitButtonElement.textContent = 'Отправка...';
 
-  if (!isFileUploaded) {
-    showErrorMessage('Пожалуйста, выберите файл для загрузки');
-    return;
-  }
-
-  if (!isHashtagsValid || !isCommentValid) {
-    // Показываем ошибки для всех невалидных полей
-    pristine.validate();
-    return;
-  }
-
-  submitButtonElement.disabled = true;
-  submitButtonElement.textContent = 'Отправка...';
-
-  try {
-    const formData = new FormData(formElement);
-    await sendData(formData);
-    showSuccessMessage();
-    hideEditForm();
-  } catch (error) {
-    showErrorMessage();
-  } finally {
-    submitButtonElement.disabled = false;
-    submitButtonElement.textContent = 'Опубликовать';
+    try {
+      const formData = new FormData(formElement);
+      await sendData(formData);
+      showSuccessMessage();
+      hideEditForm();
+    } catch (error) {
+      showErrorMessage();
+    } finally {
+      submitButtonElement.disabled = false;
+      submitButtonElement.textContent = 'Опубликовать';
+    }
   }
 };
 
@@ -262,5 +246,4 @@ const destroyFormValidation = () => {
 };
 
 export { initFormValidation, destroyFormValidation };
-
 
