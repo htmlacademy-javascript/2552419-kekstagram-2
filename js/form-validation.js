@@ -104,6 +104,7 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
+// Объявляем функции ДО их использования
 const hideEditForm = () => {
   uploadOverlayElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -246,6 +247,3 @@ const destroyFormValidation = () => {
 };
 
 export { initFormValidation, destroyFormValidation };
-
-
-
