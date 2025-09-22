@@ -105,3 +105,4 @@ function openBigPicture(photo) {
 }
 
 export { openBigPicture };
+

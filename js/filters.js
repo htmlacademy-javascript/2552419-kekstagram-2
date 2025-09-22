@@ -1,3 +1,4 @@
+
 import { debounce } from './utils.js';
 import { renderThumbnails } from './picture-thumbnails.js';
 
@@ -67,4 +68,3 @@ const initFilters = (photos) => {
 };
 
 export { initFilters };
-

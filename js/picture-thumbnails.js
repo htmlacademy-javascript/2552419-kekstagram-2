@@ -37,4 +37,3 @@ const renderThumbnails = (photosData) => {
 };
 
 export { renderThumbnails };
-
