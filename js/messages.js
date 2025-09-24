@@ -1,6 +1,6 @@
 import { isEscapeKey } from './utils.js';
 
-const showSuccessMessage = () => {
+function showSuccessMessage() {
   const successTemplate = document.querySelector('#success');
   const successElement = successTemplate.content.cloneNode(true);
   const successModal = successElement.querySelector('.success');
@@ -8,31 +8,31 @@ const showSuccessMessage = () => {
 
   document.body.append(successElement);
 
-  const onSuccessModalClose = () => {
-    successModal.remove();
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.removeEventListener('click', onDocumentClick);
-  };
-
-  const onDocumentKeydown = (evt) => {
+  function onDocumentKeydown(evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       onSuccessModalClose();
     }
-  };
+  }
 
-  const onDocumentClick = (evt) => {
+  function onDocumentClick(evt) {
     if (!evt.target.closest('.success__inner')) {
       onSuccessModalClose();
     }
-  };
+  }
+
+  function onSuccessModalClose() {
+    successModal.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
+    document.removeEventListener('click', onDocumentClick);
+  }
 
   successButton.addEventListener('click', onSuccessModalClose);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
-};
+}
 
-const showErrorMessage = (customMessage = null) => {
+function showErrorMessage(customMessage = null) {
   const errorTemplate = document.querySelector('#error');
   const errorElement = errorTemplate.content.cloneNode(true);
   const errorModal = errorElement.querySelector('.error');
@@ -45,28 +45,28 @@ const showErrorMessage = (customMessage = null) => {
 
   document.body.append(errorElement);
 
-  const onErrorModalClose = () => {
-    errorModal.remove();
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.removeEventListener('click', onDocumentClick);
-  };
-
-  const onDocumentKeydown = (evt) => {
+  function onDocumentKeydown(evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       onErrorModalClose();
     }
-  };
+  }
 
-  const onDocumentClick = (evt) => {
+  function onDocumentClick(evt) {
     if (!evt.target.closest('.error__inner')) {
       onErrorModalClose();
     }
-  };
+  }
+
+  function onErrorModalClose() {
+    errorModal.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
+    document.removeEventListener('click', onDocumentClick);
+  }
 
   errorButton.addEventListener('click', onErrorModalClose);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
-};
+}
 
 export { showSuccessMessage, showErrorMessage };
