@@ -121,6 +121,21 @@ const loadUserImage = (file) => {
 
 const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
+function onEditFormClose() {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
+}
+
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
     const errorModal = document.querySelector('.error');
@@ -138,21 +153,6 @@ function onDocumentKeydown(evt) {
     onEditFormClose();
   }
 }
-
-const onEditFormClose = () => {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
-};
 
 const onHashtagInputKeydown = (evt) => {
   if (isEscapeKey(evt)) {
