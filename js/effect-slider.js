@@ -1,9 +1,3 @@
-const EFFECT_LEVEL_CONTAINER_ELEMENT = document.querySelector('.img-upload__effect-level');
-const EFFECT_LEVEL_SLIDER_ELEMENT = document.querySelector('.effect-level__slider');
-const EFFECT_LEVEL_VALUE_ELEMENT = document.querySelector('.effect-level__value');
-const EFFECT_RADIOS_ELEMENTS = document.querySelectorAll('.effects__radio');
-const IMAGE_PREVIEW_ELEMENT = document.querySelector('.img-upload__preview img');
-
 const Effect = {
   NONE: 'none',
   CHROME: 'chrome',
@@ -63,6 +57,12 @@ const EffectConfig = {
     start: 3
   }
 };
+
+const EFFECT_LEVEL_CONTAINER_ELEMENT = document.querySelector('.img-upload__effect-level');
+const EFFECT_LEVEL_SLIDER_ELEMENT = document.querySelector('.effect-level__slider');
+const EFFECT_LEVEL_VALUE_ELEMENT = document.querySelector('.effect-level__value');
+const EFFECT_RADIOS_ELEMENTS = document.querySelectorAll('.effects__radio');
+const IMAGE_PREVIEW_ELEMENT = document.querySelector('.img-upload__preview img');
 
 let currentEffect = Effect.NONE;
 let slider = null;
@@ -150,4 +150,3 @@ const initEffects = () => {
 };
 
 export { initEffects, resetEffects };
-
