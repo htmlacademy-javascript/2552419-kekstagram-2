@@ -8,28 +8,26 @@ const showSuccessMessage = () => {
 
   document.body.append(successElement);
 
-  // Сначала объявляем ВСЕ функции
-  const onDocumentKeydown = (evt) => {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      closeSuccessModal();
-    }
-  };
-
-  const onDocumentClick = (evt) => {
-    if (!evt.target.closest('.success__inner')) {
-      closeSuccessModal();
-    }
-  };
-
-  const closeSuccessModal = () => {
+  const onSuccessModalClose = () => {
     successModal.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onDocumentClick);
   };
 
-  // Потом используем их
-  successButton.addEventListener('click', closeSuccessModal);
+  const onDocumentKeydown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      onSuccessModalClose();
+    }
+  };
+
+  const onDocumentClick = (evt) => {
+    if (!evt.target.closest('.success__inner')) {
+      onSuccessModalClose();
+    }
+  };
+
+  successButton.addEventListener('click', onSuccessModalClose);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
 };
@@ -47,28 +45,26 @@ const showErrorMessage = (customMessage = null) => {
 
   document.body.append(errorElement);
 
-  // Сначала объявляем ВСЕ функции
-  const onDocumentKeydown = (evt) => {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      closeErrorModal();
-    }
-  };
-
-  const onDocumentClick = (evt) => {
-    if (!evt.target.closest('.error__inner')) {
-      closeErrorModal();
-    }
-  };
-
-  const closeErrorModal = () => {
+  const onErrorModalClose = () => {
     errorModal.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onDocumentClick);
   };
 
-  // Потом используем их
-  errorButton.addEventListener('click', closeErrorModal);
+  const onDocumentKeydown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      onErrorModalClose();
+    }
+  };
+
+  const onDocumentClick = (evt) => {
+    if (!evt.target.closest('.error__inner')) {
+      onErrorModalClose();
+    }
+  };
+
+  errorButton.addEventListener('click', onErrorModalClose);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
 };

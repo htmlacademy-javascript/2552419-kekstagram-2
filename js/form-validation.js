@@ -121,7 +121,21 @@ const loadUserImage = (file) => {
 
 const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
 
-// Сначала объявляем ВСЕ вспомогательные функции
+const onEditFormClose = () => {
+  uploadOverlayElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  formElement.reset();
+  pristine.reset();
+  resetEffects();
+  resetScale();
+  imagePreviewElement.src = '';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+  uploadInputElement.value = '';
+};
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     const errorModal = document.querySelector('.error');
@@ -136,7 +150,7 @@ const onDocumentKeydown = (evt) => {
     }
 
     evt.preventDefault();
-    hideEditForm();
+    onEditFormClose();
   }
 };
 
@@ -158,28 +172,6 @@ const onCommentInputKeydown = (evt) => {
   }
 };
 
-// Потом основную функцию, которая их использует
-const hideEditForm = () => {
-  uploadOverlayElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-  formElement.reset();
-  pristine.reset();
-  resetEffects();
-  resetScale();
-  imagePreviewElement.src = '';
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = '';
-  });
-  uploadInputElement.value = '';
-};
-
-const showEditForm = () => {
-  uploadOverlayElement.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onDocumentKeydown);
-};
-
 const onFileInputChange = (evt) => {
   const file = evt.target.files[0];
 
@@ -194,11 +186,14 @@ const onFileInputChange = (evt) => {
   }
 
   loadUserImage(file);
-  showEditForm();
+
+  uploadOverlayElement.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const onCancelButtonClick = () => {
-  hideEditForm();
+  onEditFormClose();
 };
 
 const onFormSubmit = async (evt) => {
@@ -214,7 +209,7 @@ const onFormSubmit = async (evt) => {
       const formData = new FormData(formElement);
       await sendData(formData);
       showSuccessMessage();
-      hideEditForm();
+      onEditFormClose();
     } catch (error) {
       showErrorMessage();
     } finally {
