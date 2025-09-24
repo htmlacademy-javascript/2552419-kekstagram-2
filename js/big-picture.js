@@ -50,22 +50,7 @@ const renderCommentsPortion = () => {
   commentsLoaderElement.classList.toggle('hidden', commentsShown >= currentComments.length);
 };
 
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    onBigPictureClose();
-  }
-};
-
-const onCloseButtonClick = () => {
-  onBigPictureClose();
-};
-
-const onCommentsLoaderClick = () => {
-  renderCommentsPortion();
-};
-
-const onBigPictureClose = () => {
+function onBigPictureClose() {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
@@ -75,7 +60,22 @@ const onBigPictureClose = () => {
 
   currentComments = [];
   commentsShown = 0;
-};
+}
+
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    onBigPictureClose();
+  }
+}
+
+function onCloseButtonClick() {
+  onBigPictureClose();
+}
+
+function onCommentsLoaderClick() {
+  renderCommentsPortion();
+}
 
 const openBigPicture = (photo) => {
   const imageElement = bigPictureElement.querySelector('.big-picture__img img');
