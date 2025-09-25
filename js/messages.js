@@ -70,3 +70,4 @@ function showErrorMessage(customMessage = null) {
 }
 
 export { showSuccessMessage, showErrorMessage };
+

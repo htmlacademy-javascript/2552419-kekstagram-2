@@ -6,7 +6,7 @@ import { showSuccessMessage, showErrorMessage } from './messages.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
-const VALID_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const VALID_FILE_FORMATS = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const formElement = document.querySelector('.img-upload__form');
@@ -119,7 +119,7 @@ const loadUserImage = (file) => {
   reader.readAsDataURL(file);
 };
 
-const isValidFileType = (file) => VALID_FILE_TYPES.includes(file.type);
+const isValidFileType = (file) => VALID_FILE_FORMATS.includes(file.type);
 
 function onEditFormClose() {
   uploadOverlayElement.classList.add('hidden');
