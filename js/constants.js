@@ -1,25 +1,7 @@
-const MIN_ID = 1;
-const MAX_ID = 1000;
 const MIN_AVATAR_NUM = 1;
 const MAX_AVATAR_NUM = 6;
-const MIN_LIKES = 15;
-const MAX_LIKES = 200;
-const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 30;
-const PHOTOS_COUNT = 25;
 
 const DESCRIPTIONS = [
-  'Отличный день для фотографии!',
-  'Невероятные цвета природы',
-  'Момент, который стоит запомнить',
-  'Красота в простых вещах',
-  'Путешествие мечты',
-  'Удивительная архитектура',
-  'Вкус жизни',
-  'Эмоции через объектив'
-];
-
-const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -28,7 +10,16 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const NAMES = [
+const MESSAGE_TEXTS = [
+  'Отличное фото!',
+  'Очень красиво!',
+  'Интересный ракурс',
+  'Прекрасное освещение',
+  'Отличная композиция',
+  'Мне нравится этот снимок'
+];
+
+const USER_NAMES = [
   'Артем',
   'Мария',
   'Дмитрий',
@@ -40,17 +31,9 @@ const NAMES = [
 ];
 
 export {
-  MIN_ID,
-  MAX_ID,
   MIN_AVATAR_NUM,
   MAX_AVATAR_NUM,
-  MIN_LIKES,
-  MAX_LIKES,
-  MIN_COMMENTS,
-  MAX_COMMENTS,
-  PHOTOS_COUNT,
   DESCRIPTIONS,
-  MESSAGES,
-  NAMES
+  MESSAGE_TEXTS,
+  USER_NAMES
 };
-
